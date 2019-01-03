@@ -5,13 +5,19 @@ import App from './App'
 import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import './common/scss/element-variables.scss'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
-/* eslint-disable no-new */
+
 new Vue({
   el: '#app',
   router,
   components: { App },
+  data() {
+    return {
+      url:"127.0.0.1:8080/",
+    }
+  },
   template: '<App/>'
 })
