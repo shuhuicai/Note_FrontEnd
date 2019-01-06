@@ -48,9 +48,8 @@
     },
     
     methods: {
-      
       initFolder() {
-        fetch("http://127.0.0.1:8080/folder/initFolder", {
+        fetch(this.GLOBAL.serverURL + "/folder/initFolder", {
           cache: 'no-cache',
           credentials: 'same-origin',
           method: 'POST',

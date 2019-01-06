@@ -6,13 +6,14 @@ import router from './router'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import './common/scss/element-variables.scss'
+import global_ from './common/Global'
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
-
+Vue.prototype.GLOBAL = global_ //挂载到Vue实例上面
 new Vue({
   el: '#app',
   router,
-  components: { App },
+  components: {App},
   template: '<App/>'
 })
