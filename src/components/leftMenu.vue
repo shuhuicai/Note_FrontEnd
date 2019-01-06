@@ -2,31 +2,45 @@
   <div class="leftMenu">
     <div class="custom-tree-container">
       <div class="block">
-        <el-tree
-          :data="folderData"
-          node-key="id"
-          draggable
-          :expand-on-click-node="true">
-      <span class="custom-tree-node" slot-scope="{ node, data }">
-        <span>{{ node.label }}</span>
-        <span>
-          <el-button
-            type="text"
-            size="mini"
-            @click="() => append(data)">
-            Append
-          </el-button>
-          <el-button
-            type="text"
-            size="mini"
-            @click="() => remove(node, data)">
-            Delete
-          </el-button>
-        </span>
-      </span>
+        <el-tree :data="folderData" node-key="id" draggable :expand-on-click-node="true">
+          <span class="custom-tree-node" slot-scope="{ node, data }">
+            <span>{{ node.label}}</span>
+            <span v-if="data.isFolder==1">
+              <el-button type="text" size="mini" @click="() => popupDialog(data,false)">新建文件夹</el-button>
+              <el-button type="text" size="mini" @click="()=>popupDialog(data,true)">新建文件</el-button>
+            </span>
+            <el-button type="text" size="mini" @click="() => remove(node, data)">删除</el-button>
+          </span>
         </el-tree>
       </div>
     </div>
+    
+    <el-dialog title="创建" :visible.sync="dialogVisible" width="20%" :modal-append-to-body="false">
+      <!--文件夹-->
+      <el-form v-if="!isFile">
+        <el-form-item label="文件夹名">
+          <el-input v-model="dialogData.folderName" auto-complete="off" placeholder="请输入文件夹名"></el-input>
+        </el-form-item>
+      </el-form>
+      
+      <!--文件-->
+      <el-form v-else :model="dialogData">
+        <el-form-item label="文件名">
+          <el-input v-model="dialogData.name" auto-complete="off" placeholder="请输入文件名"></el-input>
+        </el-form-item>
+        
+        <el-form-item label="类型">
+          <el-select v-model="dialogData.type" placeholder="类型">
+            <el-option label="pdf" value="1"></el-option>
+            <el-option label="word" value="0"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="confirm" type="primary">确定</el-button>
+        <el-button @click="cancel">取消</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -36,7 +50,15 @@
   export default {
     data() {
       return {
-        folderData: []
+        folderData: [],
+        dialogVisible: false,
+        dialogData: {
+          name: '',
+          type: '',
+          folderName: '',
+        },
+        isFile: false,//区分是创建文件还是文件夹
+        currentNode: [],
       }
     },
     
@@ -48,6 +70,7 @@
     },
     
     methods: {
+      /*初始化左边文件夹结构*/
       initFolder() {
         fetch(this.GLOBAL.serverURL + "/folder/initFolder", {
           cache: 'no-cache',
@@ -69,20 +92,82 @@
           })
       },
       
-      append(data) {
-        const newChild = {id: id++, label: 'test', children: []};
-        if (!data.children) {
-          this.$set(data, 'children', []);
-        }
-        data.children.push(newChild);
+      /*弹出对话框*/
+      popupDialog(data, isFile) {
+        this.currentNode = data;
+        this.isFile = isFile;
+        this.dialogVisible = true;
       },
       
-      remove(node, data) {
+      append() {
+        var sendData = {};
+        if (this.isFile) {
+          sendData = {
+            "label": this.dialogData.name,
+            // "type":文件类型（后期补上）
+            "parentId": this.currentNode.id,
+            "isFolder": 0
+          };
+        } else {
+          sendData = {
+            "label": this.dialogData.folderName,
+            "parentId": this.currentNode.id,
+            "isFolder": 1
+          };
+        }
+        fetch(this.GLOBAL.serverURL + "/folder/createFolder", {
+          body: JSON.stringify(sendData),
+          cache: 'no-cache',
+          credentials: 'same-origin',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer',
+          headers: {
+            "Content-Type": 'application/json;charset=UTF-8',
+          }
+        }).then(response => {
+          response.json().then((data) => {
+            const newChild = data;
+            if (!this.currentNode.children) {
+              this.$set(this.currentNode, 'children', []);
+            }
+            this.currentNode.children.push(newChild);
+          })
+        }, response => {
+          console.log(response);
+        })
+      },
+      
+      remove(node, data) {//删除文件夹或文件
         const parent = node.parent;
         const children = parent.data.children || parent.data;
         const index = children.findIndex(d => d.id === data.id);
+        fetch(this.GLOBAL.serverURL + "/")
         children.splice(index, 1);
       },
+      confirm() {
+        if (this.isFile) {//文件
+          if (this.dialogData.type != '' && this.dialogData.name != '') {
+            this.dialogVisible = false;
+            this.append();
+          } else {
+            alert("请输入名字和类型");
+          }
+        } else {//文件夹
+          if (this.dialogData.folderName != '') {
+            this.dialogVisible = false;
+            this.append();
+          } else {
+            alert("请输入文件夹名");
+          }
+        }
+      },
+      cancel() {//取消按钮
+        this.dialogData.name = '';
+        this.dialogData.type = '';
+        this.dialogVisible = false;
+      }
     }
   };
 </script>
@@ -92,7 +177,7 @@
     position: fixed;
     bottom: 0;
     top: 60px;
-    width: 190px;
+    width: 25%;
     left: 0;
     z-index: 999;
     ul {
