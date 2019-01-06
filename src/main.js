@@ -14,10 +14,5 @@ new Vue({
   el: '#app',
   router,
   components: { App },
-  data() {
-    return {
-      url:"127.0.0.1:8080/",
-    }
-  },
   template: '<App/>'
 })

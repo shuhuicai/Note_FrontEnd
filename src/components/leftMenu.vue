@@ -1,25 +1,91 @@
 <template>
   <div class="leftMenu">
-  
+    <div class="custom-tree-container">
+      <div class="block">
+        <el-tree
+          :data="folderData"
+          node-key="id"
+          draggable
+          :expand-on-click-node="true">
+      <span class="custom-tree-node" slot-scope="{ node, data }">
+        <span>{{ node.label }}</span>
+        <span>
+          <el-button
+            type="text"
+            size="mini"
+            @click="() => append(data)">
+            Append
+          </el-button>
+          <el-button
+            type="text"
+            size="mini"
+            @click="() => remove(node, data)">
+            Delete
+          </el-button>
+        </span>
+      </span>
+        </el-tree>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+  let id = 1000;
+  
   export default {
-    methods: {
-      handleOpen(key, keyPath) {
-        console.log(key, keyPath);
-      },
-      handleClose(key, keyPath) {
-        console.log(key, keyPath);
+    data() {
+      return {
+        folderData: []
       }
     },
-    computed: {
-      onRoutes() {
-        return this.$route.path.replace('/', '');
-      }
+    
+    created() {
+      this.initFolder();
+      setTimeout(() => {
+        this.loading = false;
+      }, 1500)
+    },
+    
+    methods: {
+      
+      initFolder() {
+        fetch("http://127.0.0.1:8080/folder/initFolder", {
+          cache: 'no-cache',
+          credentials: 'same-origin',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer',
+          headers: {
+            Accept: "application/json"
+          }
+        }).then(response => {
+            response.json().then((data) => {
+              this.folderData = data;
+            });
+          },
+          response => {
+            console.log(response);
+          })
+      },
+      
+      append(data) {
+        const newChild = {id: id++, label: 'test', children: []};
+        if (!data.children) {
+          this.$set(data, 'children', []);
+        }
+        data.children.push(newChild);
+      },
+      
+      remove(node, data) {
+        const parent = node.parent;
+        const children = parent.data.children || parent.data;
+        const index = children.findIndex(d => d.id === data.id);
+        children.splice(index, 1);
+      },
     }
-  }
+  };
 </script>
 <style lang="scss">
   .leftMenu {
@@ -34,5 +100,14 @@
       height: 100%;
       border-radius: 0;
     }
+  }
+  
+  .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
   }
 </style>
