@@ -99,6 +99,7 @@
         this.dialogVisible = true;
       },
       
+      /* 新建文件夹或文件 */
       append() {
         var sendData = {};
         if (this.isFile) {
@@ -143,9 +144,40 @@
         const parent = node.parent;
         const children = parent.data.children || parent.data;
         const index = children.findIndex(d => d.id === data.id);
-        fetch(this.GLOBAL.serverURL + "/")
-        children.splice(index, 1);
+        console.log(data);
+        fetch(this.GLOBAL.serverURL + "/folder/deleteFolder", {
+          body: JSON.stringify(data),
+          cache: 'no-cache',
+          credentials: 'same-origin',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer',
+          headers: {
+            "Content-Type": 'application/json;charset=UTF-8',
+            Accept: "application/json"
+          }
+        }).then(response => {
+          response.json().then((data) => {
+            if (data) {
+              console.log("success");
+              children.splice(index, 1);
+            }
+          })
+        }, response => {
+          console.log(response);
+        })
+        
+        /*fetch(this.GLOBAL.serverURL + "/folder/deleteFolder",{
+        
+        }).then(response=>{
+        
+        },response=>{
+        
+        });*/
       },
+      
+      /* 确定按钮 */
       confirm() {
         if (this.isFile) {//文件
           if (this.dialogData.type != '' && this.dialogData.name != '') {
@@ -177,7 +209,7 @@
     position: fixed;
     bottom: 0;
     top: 60px;
-    width: 25%;
+    width: 30%;
     left: 0;
     z-index: 999;
     ul {
