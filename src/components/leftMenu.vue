@@ -59,7 +59,4 @@
       border-radius: 0;
     }
   }
-  
-  .folder {
-  }
 </style>
