@@ -21,8 +21,7 @@
               <span>我的标签</span>
             </template>
             <el-menu-item-group>
-              <p>df</p>
-              <p>aa</p>
+              <tagMenu></tagMenu>
             </el-menu-item-group>
           </el-submenu>
           
@@ -38,9 +37,11 @@
 
 <script>
   import folderTree from './folder/folderTree'
+  import tagMenu from './Tag/tagMenu'
   
   export default {
     components: {
+      tagMenu,
       folderTree,
     },
   };
@@ -51,7 +52,7 @@
     position: fixed;
     bottom: 0;
     top: 60px;
-    width: 30%;
+    width: 100%;
     left: 0;
     z-index: 999;
     ul {

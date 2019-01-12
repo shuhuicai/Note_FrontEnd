@@ -190,7 +190,7 @@
         this.dialogData.name = '';
         this.dialogData.type = '';
         this.dialogVisible = false;
-      }
+      },
     }
   }
 </script>
