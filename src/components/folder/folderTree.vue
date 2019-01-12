@@ -71,7 +71,7 @@
     methods: {
       /*初始化左边文件夹结构*/
       initFolder() {
-        fetch(this.GLOBAL.serverURL + "/folder/initFolder", {
+        fetch(this.constant.serverURL + "/folder/initFolder", {
           cache: 'no-cache',
           credentials: 'same-origin',
           method: 'POST',
@@ -115,7 +115,7 @@
             "isFolder": 1
           };
         }
-        fetch(this.GLOBAL.serverURL + "/folder/createFolder", {
+        fetch(this.constant.serverURL + "/folder/createFolder", {
           body: JSON.stringify(sendData),
           cache: 'no-cache',
           credentials: 'same-origin',
@@ -144,7 +144,7 @@
         const children = parent.data.children || parent.data;
         const index = children.findIndex(d => d.id === data.id);
         console.log(data);
-        fetch(this.GLOBAL.serverURL + "/folder/deleteFolder", {
+        fetch(this.constant.serverURL + "/folder/deleteFolder", {
           body: JSON.stringify(data),
           cache: 'no-cache',
           credentials: 'same-origin',

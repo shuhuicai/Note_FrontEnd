@@ -7,7 +7,7 @@
           class="el-menu-vertical-demo">
           <el-submenu index="1">
             <template slot="title">
-              <i class="el-icon-location"></i>
+              <i class="el-icon-document"></i>
               <span>我的文件夹</span>
             </template>
             <el-menu-item-group>
@@ -17,7 +17,7 @@
   
           <el-submenu index="2">
             <template slot="title">
-              <i class="el-icon-location"></i>
+              <i class="el-icon-star-on"></i>
               <span>我的标签</span>
             </template>
             <el-menu-item-group>
