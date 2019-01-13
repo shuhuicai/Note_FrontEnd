@@ -4,17 +4,17 @@
       <div class="block">
         <el-tree :data="folderData" node-key="id" draggable :expand-on-click-node="true">
           <span class="custom-tree-node" slot-scope="{ node, data }" v-contextmenu:folderMenu
-                @contextmenu="getNodeData(data)">
+                @contextmenu="getNodeData(node,data)">
             <span>{{ node.label}}</span>
             <span>
-               <v-contextmenu ref="folderMenu" :key="data.id">
+               <v-contextmenu ref="folderMenu">
                  <v-contextmenu-submenu title="创建">
                    <v-contextmenu-item @click="popupDialog(false)">文件夹</v-contextmenu-item>
                    <v-contextmenu-item>Markdown</v-contextmenu-item>
                    <v-contextmenu-item>word</v-contextmenu-item>
                    <v-contextmenu-item>pdf</v-contextmenu-item>
                  </v-contextmenu-submenu>
-                 <v-contextmenu-item>删除</v-contextmenu-item>
+                 <v-contextmenu-item @click="remove">删除</v-contextmenu-item>
                  <v-contextmenu-item>重命名</v-contextmenu-item>
                </v-contextmenu>
             </span>
@@ -74,7 +74,8 @@
           folderName: '',
         },
         isFile: false,//区分是创建文件还是文件夹
-        currentNode: [],
+        currentData: [],
+        currentNote: [],
       }
     },
     
@@ -116,8 +117,9 @@
       },
       
       /*获取当前右键点击的文件夹数据*/
-      getNodeData(data) {
-        this.currentNode = data;
+      getNodeData(node, data) {
+        this.currentData = data;
+        this.currentNode = node;
       },
       
       /* 新建文件夹或文件 */
@@ -127,13 +129,13 @@
           sendData = {
             "label": this.dialogData.name,
             // "type":文件类型（后期补上）
-            "parentId": this.currentNode.id,
+            "parentId": this.currentData.id,
             "isFolder": 0
           };
         } else {
           sendData = {
             "label": this.dialogData.folderName,
-            "parentId": this.currentNode.id,
+            "parentId": this.currentData.id,
             "isFolder": 1
           };
         }
@@ -151,23 +153,22 @@
         }).then(response => {
           response.json().then((data) => {
             const newChild = data;
-            if (!this.currentNode.children) {
-              this.$set(this.currentNode, 'children', []);
+            if (!this.currentData.children) {
+              this.$set(this.currentData, 'children', []);
             }
-            this.currentNode.children.push(newChild);
+            this.currentData.children.push(newChild);
           })
         }, response => {
           console.log(response);
         })
       },
       
-      remove(node, data) {//删除文件夹或文件
-        const parent = node.parent;
+      remove() {//删除文件夹或文件
+        const parent = this.currentNode.parent;
         const children = parent.data.children || parent.data;
-        const index = children.findIndex(d => d.id === data.id);
-        console.log(data);
+        const index = children.findIndex(d => d.id === this.currentData.id);
         fetch(this.constant.serverURL + "/folder/deleteFolder", {
-          body: JSON.stringify(data),
+          body: JSON.stringify(this.currentData),
           cache: 'no-cache',
           credentials: 'same-origin',
           method: 'POST',
