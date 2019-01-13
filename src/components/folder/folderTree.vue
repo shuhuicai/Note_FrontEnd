@@ -1,18 +1,35 @@
-<template>
+<template xmlns:v-contextmenu="http://www.w3.org/1999/xhtml">
   <div>
     <div class="custom-tree-container">
       <div class="block">
         <el-tree :data="folderData" node-key="id" draggable :expand-on-click-node="true">
-          <span class="custom-tree-node" slot-scope="{ node, data }">
+          <span class="custom-tree-node" slot-scope="{ node, data }" v-contextmenu:folderMenu
+                @contextmenu="getNodeData(data)">
             <span>{{ node.label}}</span>
-            <span v-if="data.isFolder==1">
+            <span>
+               <v-contextmenu ref="folderMenu" :key="data.id">
+                 <v-contextmenu-submenu title="创建">
+                   <v-contextmenu-item @click="popupDialog(false)">文件夹</v-contextmenu-item>
+                   <v-contextmenu-item>Markdown</v-contextmenu-item>
+                   <v-contextmenu-item>word</v-contextmenu-item>
+                   <v-contextmenu-item>pdf</v-contextmenu-item>
+                 </v-contextmenu-submenu>
+                 <v-contextmenu-item>删除</v-contextmenu-item>
+                 <v-contextmenu-item>重命名</v-contextmenu-item>
+               </v-contextmenu>
+            </span>
+            <!--<span v-if="data.isFolder==1">
               <el-button type="text" size="mini" @click="() => popupDialog(data,false)">新建文件夹</el-button>
               <el-button type="text" size="mini" @click="()=>popupDialog(data,true)">新建文件</el-button>
             </span>
-            <el-button type="text" size="mini" @click="() => remove(node, data)">删除</el-button>
+            <el-button type="text" size="mini" @click="() => remove(node, data)">删除</el-button>-->
           </span>
         </el-tree>
       </div>
+    </div>
+    
+    <div>
+    
     </div>
     
     <el-dialog title="创建" :visible.sync="dialogVisible" width="20%" :modal-append-to-body="false">
@@ -92,10 +109,15 @@
       },
       
       /*弹出对话框*/
-      popupDialog(data, isFile) {
-        this.currentNode = data;
+      popupDialog(isFile) {
+        // console.log(vm.$vnode.child.$$contextmenu.$parent.node.data);
         this.isFile = isFile;
         this.dialogVisible = true;
+      },
+      
+      /*获取当前右键点击的文件夹数据*/
+      getNodeData(data) {
+        this.currentNode = data;
       },
       
       /* 新建文件夹或文件 */
