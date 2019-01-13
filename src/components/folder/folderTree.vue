@@ -3,34 +3,31 @@
     <div class="custom-tree-container">
       <div class="block">
         <el-tree :data="folderData" node-key="id" draggable :expand-on-click-node="true">
-          <span class="custom-tree-node" slot-scope="{ node, data }" v-contextmenu:folderMenu
-                @contextmenu="getNodeData(node,data)">
-            <span>{{ node.label}}</span>
-            <span>
-               <v-contextmenu ref="folderMenu">
-                 <v-contextmenu-submenu title="创建">
-                   <v-contextmenu-item @click="popupDialog(false)">文件夹</v-contextmenu-item>
-                   <v-contextmenu-item>Markdown</v-contextmenu-item>
-                   <v-contextmenu-item>word</v-contextmenu-item>
-                   <v-contextmenu-item>pdf</v-contextmenu-item>
-                 </v-contextmenu-submenu>
-                 <v-contextmenu-item @click="remove">删除</v-contextmenu-item>
-                 <v-contextmenu-item>重命名</v-contextmenu-item>
-               </v-contextmenu>
-            </span>
-            <!--<span v-if="data.isFolder==1">
-              <el-button type="text" size="mini" @click="() => popupDialog(data,false)">新建文件夹</el-button>
-              <el-button type="text" size="mini" @click="()=>popupDialog(data,true)">新建文件</el-button>
-            </span>
-            <el-button type="text" size="mini" @click="() => remove(node, data)">删除</el-button>-->
+            <span class="custom-tree-node" slot-scope="{ node, data }">
+              <span v-if="data.isFolder==1" v-contextmenu:folderMenu @contextmenu="getNodeData(node,data)">{{ node.label}}</span>
+              <span v-else v-contextmenu:fileMenu @contextmenu="getNodeData(node,data)">{{node.label}}</span>
           </span>
         </el-tree>
       </div>
     </div>
     
-    <div>
+    <!--文件夹的情况-->
+    <v-contextmenu ref="folderMenu">
+      <v-contextmenu-submenu title="创建">
+        <v-contextmenu-item @click="popupDialog(false)">文件夹</v-contextmenu-item>
+        <v-contextmenu-item>Markdown</v-contextmenu-item>
+        <v-contextmenu-item>word</v-contextmenu-item>
+        <v-contextmenu-item>pdf</v-contextmenu-item>
+      </v-contextmenu-submenu>
+      <v-contextmenu-item @click="remove">删除</v-contextmenu-item>
+      <v-contextmenu-item>重命名</v-contextmenu-item>
+    </v-contextmenu>
     
-    </div>
+    <!--文件的情况-->
+    <v-contextmenu ref="fileMenu">
+      <v-contextmenu-item @click="remove">删除</v-contextmenu-item>
+      <v-contextmenu-item>重命名</v-contextmenu-item>
+    </v-contextmenu>
     
     <el-dialog title="创建" :visible.sync="dialogVisible" width="20%" :modal-append-to-body="false">
       <!--文件夹-->
