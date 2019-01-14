@@ -1,7 +1,8 @@
 <template>
   <div class="leftMenu">
     <el-row class="tac">
-      <el-col :span="12">
+      <!--:span="12"-->
+      <el-col>
         <el-menu
           default-active="2"
           class="el-menu-vertical-demo">
@@ -47,18 +48,23 @@
     
   };
 </script>
-<style lang="scss">
+<!--<style lang="scss">-->
+<style>
   .leftMenu {
+    width: 100%;
+    margin:0;
+    padding: 0;
+  }
+ /* .leftMenu {
     display: block;
     position: fixed;
     bottom: 0;
     top: 60px;
-    width: 100%;
     left: 0;
     z-index: 999;
     ul {
       height: 100%;
       border-radius: 0;
     }
-  }
+  }*/
 </style>

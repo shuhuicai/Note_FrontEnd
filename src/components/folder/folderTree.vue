@@ -21,7 +21,7 @@
         <v-contextmenu-item>pdf</v-contextmenu-item>
       </v-contextmenu-submenu>
       <v-contextmenu-submenu title="上传">
-        <v-contextmenu-item>图片</v-contextmenu-item>
+        <v-contextmenu-item @click="toUploadPage">图片</v-contextmenu-item>
         <v-contextmenu-item>pdf</v-contextmenu-item>
         <v-contextmenu-item>word</v-contextmenu-item>
       </v-contextmenu-submenu>
@@ -217,6 +217,10 @@
         this.dialogData.type = '';
         this.dialogVisible = false;
       },
+      //跳转到上传文件的页面
+      toUploadPage() {
+        this.$router.push({path:'/home/uploadImage'});
+      }
     }
   }
 </script>
