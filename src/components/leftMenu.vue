@@ -44,6 +44,7 @@
       tagMenu,
       folderTree,
     },
+    
   };
 </script>
 <style lang="scss">
