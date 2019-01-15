@@ -48,23 +48,10 @@
     
   };
 </script>
-<!--<style lang="scss">-->
 <style>
   .leftMenu {
     width: 100%;
     margin:0;
     padding: 0;
   }
- /* .leftMenu {
-    display: block;
-    position: fixed;
-    bottom: 0;
-    top: 60px;
-    left: 0;
-    z-index: 999;
-    ul {
-      height: 100%;
-      border-radius: 0;
-    }
-  }*/
 </style>

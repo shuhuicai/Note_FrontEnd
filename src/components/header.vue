@@ -11,7 +11,6 @@
         <template slot="title">{{username}}(系统管理员)</template>
         <el-menu-item index="2-1" @click="signOut">退出登录</el-menu-item>
       </el-submenu>
-      <!--<div></div>-->
     </el-menu>
     <div class="line"></div>
   </div>

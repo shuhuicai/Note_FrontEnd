@@ -14,10 +14,10 @@ export default new Router({
     }, {
       path: '/home',
       component: home,
-      children:[
+      children: [
         {
-          path:'/home/uploadImage',
-          component:uploadImage,
+          path: '/home/uploadImage',
+          component: uploadImage,
         }
       ]
     },
