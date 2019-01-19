@@ -4,6 +4,7 @@
       class="upload-demo"
       ref="uploadPic"
       :action="uploadPath"
+      :data="uploadParams"
       :on-success="uploadSuccess"
       :on-error="uploadFailure"
       drag
@@ -24,7 +25,9 @@
     data() {
       return {
         uploadPath: this.constant.serverURL + "/image/saveImage",
-        folderTree:JSON.parse(this.$route.params.folderTree),//当前所属的文件夹信息
+        uploadParams: {
+          "parentId": this.$route.params.id,//当前所属的文件夹id
+        }
       }
     },
     methods: {
@@ -34,6 +37,7 @@
       },
       //上传成功回调函数
       uploadSuccess(response, file, fileList) {
+        this.$root.Bus.$emit('updateFolder', response);//将消息数据通过EventBus的形式传到FolderTree组件
         this.$notify({
           title: '提示',
           message: '上传成功',

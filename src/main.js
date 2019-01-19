@@ -18,6 +18,11 @@ Vue.prototype.constant = constant; //挂载到Vue实例上面 常量
 new Vue({
   el: '#app',
   router,
+  data() {
+    return {
+      Bus:new Vue(),
+    }
+  },
   components: {App},
   template: '<App/>'
 })

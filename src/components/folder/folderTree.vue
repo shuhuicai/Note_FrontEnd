@@ -2,7 +2,7 @@
   <div>
     <div class="custom-tree-container">
       <div class="block">
-        <el-tree :data="folderData" node-key="id" draggable :expand-on-click-node="true">
+        <el-tree ref="tree" :data="folderData" node-key="id" draggable :expand-on-click-node="true">
             <span class="custom-tree-node" slot-scope="{ node, data }">
               <span v-if="data.isFolder==1" v-contextmenu:folderMenu @contextmenu="getNodeData(node,data)">{{ node.label}}</span>
               <span v-else v-contextmenu:fileMenu @contextmenu="getNodeData(node,data)">{{node.label}}</span>
@@ -88,7 +88,11 @@
         this.loading = false;
       }, 1500)
     },
-    
+    mounted() {
+      this.$root.Bus.$on('updateFolder', value => {
+        this.$refs.tree.append(value, value.parentId);//将文件名字添加到目录
+      })
+    },
     methods: {
       /*初始化左边文件夹结构*/
       initFolder() {
@@ -108,7 +112,6 @@
             });
           },
           response => {
-            console.log(response);
           })
       },
       
@@ -123,7 +126,6 @@
       getNodeData(node, data) {
         this.currentData = data;
         this.currentNode = node;
-        console.log(this.currentData);
       },
       
       /* 新建文件夹或文件 */
@@ -163,7 +165,6 @@
             this.currentData.children.push(newChild);
           })
         }, response => {
-          console.log(response);
         })
       },
       
@@ -186,12 +187,10 @@
         }).then(response => {
           response.json().then((data) => {
             if (data) {
-              console.log("success");
               children.splice(index, 1);
             }
           })
         }, response => {
-          console.log(response);
         })
       },
       
@@ -220,7 +219,7 @@
       },
       //跳转到上传文件的页面
       toUploadPage() {
-        this.$router.push({name: 'uploadImage',params:{folderTree:JSON.stringify(this.currentData)}});
+        this.$router.push({name: 'uploadImage', params: {id: this.currentData.id}});
       }
     }
   }
