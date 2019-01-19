@@ -77,8 +77,8 @@
           folderName: '',
         },
         isFile: false,//区分是创建文件还是文件夹
-        currentData: [],
-        currentNote: [],
+        currentData: {},
+        currentNote: {},
       }
     },
     
@@ -123,6 +123,7 @@
       getNodeData(node, data) {
         this.currentData = data;
         this.currentNode = node;
+        console.log(this.currentData);
       },
       
       /* 新建文件夹或文件 */
@@ -219,7 +220,7 @@
       },
       //跳转到上传文件的页面
       toUploadPage() {
-        this.$router.push({path:'/home/uploadImage'});
+        this.$router.push({name: 'uploadImage',params:{folderTree:JSON.stringify(this.currentData)}});
       }
     }
   }

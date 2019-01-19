@@ -16,6 +16,7 @@ export default new Router({
       component: home,
       children: [
         {
+          name:'uploadImage',
           path: '/home/uploadImage',
           component: uploadImage,
         }

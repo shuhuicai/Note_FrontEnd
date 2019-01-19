@@ -18,11 +18,13 @@
 </template>
 
 <script>
+  
   export default {
     name: "uploadImage",
     data() {
       return {
-        uploadPath: this.constant.serverURL + "/image/testImage",
+        uploadPath: this.constant.serverURL + "/image/saveImage",
+        folderTree:JSON.parse(this.$route.params.folderTree),//当前所属的文件夹信息
       }
     },
     methods: {
