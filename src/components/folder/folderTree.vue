@@ -215,7 +215,11 @@
       },
       /*双击文件*/
       doubleClick(data) {
-        this.$router.push({name: 'showImage', params: {imgURL: data.fileUrl}});
+        if (data.fileType == 0) {
+          this.$router.push({name: 'showImage', params: {imgURL: data.fileUrl}});
+        } else {
+          alert("111");
+        }
       },
       cancel() {//取消按钮
         this.dialogData.name = '';

@@ -1,6 +1,6 @@
 <template>
   <div class="showImage">
-    <img src="imgURL">
+    <img v-bind:src="reqURL"/>
   </div>
 </template>
 
@@ -9,9 +9,14 @@
     name: "showImage",
     data() {
       return {
-        imgURl: this.$route.params.imgURL,
+        imgURL: '',
+        reqURL: this.constant.serverURL + "/image/showImage?visitURL=" + this.imgURL,
       }
     },
+    beforeCreate() {
+      this.imgURL = this.$route.params.imgURL;
+    }
+    
   }
 </script>
 
