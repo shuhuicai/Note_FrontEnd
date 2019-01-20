@@ -5,7 +5,8 @@
         <el-tree ref="tree" :data="folderData" node-key="id" draggable :expand-on-click-node="true">
             <span class="custom-tree-node" slot-scope="{ node, data }">
               <span v-if="data.isFolder==1" v-contextmenu:folderMenu @contextmenu="getNodeData(node,data)">{{ node.label}}</span>
-              <span v-else v-contextmenu:fileMenu @contextmenu="getNodeData(node,data)">{{node.label}}</span>
+              <span v-else v-contextmenu:fileMenu @dblclick="doubleClick(data)"
+                    @contextmenu="getNodeData(node,data)">{{node.label}}</span>
           </span>
         </el-tree>
       </div>
@@ -211,6 +212,10 @@
             alert("请输入文件夹名");
           }
         }
+      },
+      /*双击文件*/
+      doubleClick(data) {
+        this.$router.push({name: 'showImage', params: {imgURL: data.fileUrl}});
       },
       cancel() {//取消按钮
         this.dialogData.name = '';
