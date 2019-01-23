@@ -16,7 +16,6 @@
     beforeCreate() {
       this.imgURL = this.$route.params.imgURL;
     }
-    
   }
 </script>
 
