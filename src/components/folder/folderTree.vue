@@ -22,9 +22,9 @@
         <v-contextmenu-item>pdf</v-contextmenu-item>
       </v-contextmenu-submenu>
       <v-contextmenu-submenu title="上传">
-        <v-contextmenu-item @click="toUploadPage">图片</v-contextmenu-item>
-        <v-contextmenu-item>pdf</v-contextmenu-item>
-        <v-contextmenu-item>word</v-contextmenu-item>
+        <v-contextmenu-item @click="toUploadPage(0)">图片</v-contextmenu-item>
+        <v-contextmenu-item @click="toUploadPage(1)">pdf</v-contextmenu-item>
+        <v-contextmenu-item @click="toUploadPage(2)">word</v-contextmenu-item>
       </v-contextmenu-submenu>
       <v-contextmenu-item @click="remove">删除</v-contextmenu-item>
       <v-contextmenu-item>重命名</v-contextmenu-item>
@@ -227,8 +227,14 @@
         this.dialogVisible = false;
       },
       //跳转到上传文件的页面
-      toUploadPage() {
-        this.$router.push({name: 'uploadImage', params: {id: this.currentData.id}});
+      toUploadPage(fileType) {
+        this.$router.push({
+          name: 'uploadImage',
+          params: {
+            id: this.currentData.id,
+            fileType: fileType
+          }
+        });
       }
     }
   }

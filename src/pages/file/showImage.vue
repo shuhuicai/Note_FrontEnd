@@ -10,7 +10,7 @@
     data() {
       return {
         imgURL: '',
-        reqURL: this.constant.serverURL + "/image/showImage?visitURL=" + this.imgURL,
+        reqURL: this.constant.serverURL + "/file/showFile?visitURL=" + this.imgURL,
       }
     },
     beforeCreate() {
