@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import home from '../pages/home'
 import uploadImage from '../pages/upload/uploadImage'
 import showImage from '../pages/file/showImage'
+import showFile from '../pages/file/showFile'
 
 Vue.use(Router)
 
@@ -24,6 +25,10 @@ export default new Router({
           name: 'showImage',
           path: '/home/showImage',
           component: showImage,
+        }, {
+          name: 'showFile',
+          path: '/home/showFile',
+          component: showFile,
         }
       ]
     },

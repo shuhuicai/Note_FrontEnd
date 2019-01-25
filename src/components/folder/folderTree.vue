@@ -218,7 +218,7 @@
         if (data.fileType == 0) {
           this.$router.push({name: 'showImage', params: {imgURL: data.fileUrl}});
         } else {
-          alert("111");
+          this.$router.push({name:'showFile',params:{file_url:data.fileUrl}});
         }
       },
       cancel() {//取消按钮
