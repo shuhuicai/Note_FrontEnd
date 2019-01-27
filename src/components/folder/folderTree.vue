@@ -4,9 +4,15 @@
       <div class="block">
         <el-tree ref="tree" :data="folderData" node-key="id" draggable :expand-on-click-node="true">
             <span class="custom-tree-node" slot-scope="{ node, data }">
-              <span v-if="data.isFolder==1" v-contextmenu:folderMenu @contextmenu="getNodeData(node,data)">{{ node.label}}</span>
-              <span v-else v-contextmenu:fileMenu @dblclick="doubleClick(data)"
-                    @contextmenu="getNodeData(node,data)">{{node.label}}</span>
+              <li v-if="data.isFolder==1" v-contextmenu:folderMenu @contextmenu="getNodeData(node,data)">
+                <span v-if="data.remarks==0">{{ node.label}}</span>
+                <input v-model="label" v-else @blur="submitName">
+              </li>
+              <li v-else v-contextmenu:fileMenu @dblclick="doubleClick(data)"
+                  @contextmenu="getNodeData(node,data)">
+                <span v-if="data.remarks==0">{{node.label}}</span>
+                <input v-model="label" v-else @blur="submitName">
+              </li>
           </span>
         </el-tree>
       </div>
@@ -25,13 +31,14 @@
         <v-contextmenu-item @click="toUploadPage(2)">word</v-contextmenu-item>
       </v-contextmenu-submenu>
       <v-contextmenu-item @click="remove">删除</v-contextmenu-item>
-      <v-contextmenu-item>重命名</v-contextmenu-item>
+      <v-contextmenu-item @click="updateName">重命名</v-contextmenu-item>
     </v-contextmenu>
     
     <!--文件的情况-->
     <v-contextmenu ref="fileMenu">
+      <v-contextmenu-item>打开</v-contextmenu-item>
       <v-contextmenu-item @click="remove">删除</v-contextmenu-item>
-      <v-contextmenu-item>重命名</v-contextmenu-item>
+      <v-contextmenu-item @click="updateName">重命名</v-contextmenu-item>
     </v-contextmenu>
     
     <el-dialog title="创建" :visible.sync="dialogVisible" width="20%" :modal-append-to-body="false">
@@ -78,6 +85,7 @@
         isFile: false,//区分是创建文件还是文件夹
         currentData: {},
         currentNote: {},
+        label: '',
       }
     },
     
@@ -141,7 +149,6 @@
         if (this.isFile) {
           sendData = {
             "label": this.dialogData.name,
-            // "type":文件类型（后期补上）
             "parentId": this.currentData.id,
             "isFolder": 0
           };
@@ -149,7 +156,8 @@
           sendData = {
             "label": this.dialogData.folderName,
             "parentId": this.currentData.id,
-            "isFolder": 1
+            "isFolder": 1,
+            "fileType": -1
           };
         }
         fetch(this.constant.serverURL + "/folder/createFolder", {
@@ -224,7 +232,7 @@
         if (data.fileType == 0) {
           this.$router.push({name: 'showImage', params: {imgURL: data.fileUrl}});
         } else {
-          this.$router.push({name:'showFile',params:{file_url:data.fileUrl}});
+          this.$router.push({name: 'showFile', params: {file_url: data.fileUrl}});
         }
       },
       cancel() {//取消按钮
@@ -241,6 +249,48 @@
             fileType: fileType
           }
         });
+      },
+      /* 重命名 */
+      updateName() {
+        this.currentData.remarks = 1;
+        this.label = this.currentNode.label;
+      },
+      /* 更新新名字到服务器 */
+      submitName() {
+        this.currentData.remarks = 0;
+        var temp = this.currentData.label;
+        this.currentData.label = this.label;
+        fetch(this.constant.serverURL + "/folder/updateLabel", {
+          body: JSON.stringify({
+            "id": this.currentData.id,
+            "label": this.currentData.label
+          }),
+          cache: 'no-cache',
+          credentials: 'same-origin',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer',
+          headers: {
+            "Content-Type": 'application/json;charset=UTF-8',
+            Accept: "application/json"
+          }
+        }).then(response => {
+          response.json().then((data) => {
+            if (!data) {
+              this.currentData.label = temp;
+              this.$notify.error({
+                title: '提示',
+                message: '更新失败',
+              });
+            }
+          })
+        }, response => {
+          this.$notify.error({
+            title: '提示',
+            message: '更新失败',
+          });
+        })
       }
     }
   }
