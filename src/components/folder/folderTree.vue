@@ -16,10 +16,8 @@
     <v-contextmenu ref="folderMenu">
       <v-contextmenu-submenu title="创建">
         <v-contextmenu-item @click="popupDialog(false)">文件夹</v-contextmenu-item>
-        <v-contextmenu-item>笔记</v-contextmenu-item>
+        <v-contextmenu-item @click="createNote">笔记</v-contextmenu-item>
         <v-contextmenu-item>Markdown</v-contextmenu-item>
-        <v-contextmenu-item>word</v-contextmenu-item>
-        <v-contextmenu-item>pdf</v-contextmenu-item>
       </v-contextmenu-submenu>
       <v-contextmenu-submenu title="上传">
         <v-contextmenu-item @click="toUploadPage(0)">图片</v-contextmenu-item>
@@ -115,7 +113,15 @@
           response => {
           })
       },
-      
+      /* 跳转到创建笔记 */
+      createNote() {
+        this.$router.push({
+          name: 'noteFile',
+          params: {
+            id: this.currentData.id,
+          }
+        });
+      },
       /*弹出对话框*/
       popupDialog(isFile) {
         // console.log(vm.$vnode.child.$$contextmenu.$parent.node.data);
@@ -129,7 +135,7 @@
         this.currentNode = node;
       },
       
-      /* 新建文件夹或文件 */
+      /* 新建文件夹 */
       append() {
         var sendData = {};
         if (this.isFile) {

@@ -4,6 +4,7 @@ import home from '../pages/home'
 import uploadImage from '../pages/upload/uploadImage'
 import showImage from '../pages/file/showImage'
 import showFile from '../pages/file/showFile'
+import noteFile from '../pages/file/noteFile'
 
 Vue.use(Router)
 
@@ -29,6 +30,10 @@ export default new Router({
           name: 'showFile',
           path: '/home/showFile',
           component: showFile,
+        }, {
+          name: 'noteFile',
+          path: '/home/noteFile',
+          component: noteFile
         }
       ]
     },
