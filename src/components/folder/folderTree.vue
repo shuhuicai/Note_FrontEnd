@@ -286,6 +286,7 @@
             }
           })
         }, response => {
+          this.currentData.label = temp;
           this.$notify.error({
             title: '提示',
             message: '更新失败',

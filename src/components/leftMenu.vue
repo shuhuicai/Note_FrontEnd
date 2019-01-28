@@ -15,7 +15,7 @@
               <folderTree></folderTree>
             </el-menu-item-group>
           </el-submenu>
-  
+          
           <el-submenu index="2">
             <template slot="title">
               <i class="el-icon-star-on"></i>
@@ -51,7 +51,5 @@
 <style>
   .leftMenu {
     width: 100%;
-    margin:0;
-    padding: 0;
   }
 </style>

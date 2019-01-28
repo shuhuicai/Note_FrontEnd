@@ -20,7 +20,7 @@ new Vue({
   router,
   data() {
     return {
-      Bus:new Vue(),
+      Bus: new Vue(),
     }
   },
   components: {App},
