@@ -5,7 +5,7 @@ import uploadImage from '../pages/upload/uploadImage'
 import showImage from '../pages/file/showImage'
 import showFile from '../pages/file/showFile'
 import noteFile from '../pages/file/noteFile'
-
+import login from '../pages/login'
 Vue.use(Router)
 
 export default new Router({
@@ -36,6 +36,9 @@ export default new Router({
           component: noteFile
         }
       ]
-    },
+    }, {
+      path: '/login',
+      component: login
+    }
   ]
 })
