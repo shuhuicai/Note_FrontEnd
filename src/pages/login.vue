@@ -1,9 +1,11 @@
 <template>
   <div class="login">
     <p>系统登录</p>
-    <input type="text" v-model="username" name="account" placeholder="用户名">
-    <input type="password" v-model="password" name="password" placeholder="密码">
-    <button @click="doLogin">登录</button>
+    <div>
+      <input type="text" v-model="username" name="account" placeholder="用户名">
+      <input type="password" v-model="password" name="password" placeholder="密码">
+      <button @click="doLogin">登录</button>
+    </div>
   </div>
 </template>
 
@@ -25,11 +27,15 @@
             "password": this.password
           }),
           cache: 'no-cache',
-          credentials: 'same-origin',
+          credentials: 'include',
           method: 'POST',
           mode: 'cors',
           redirect: 'follow',
           referrer: 'no-referrer',
+          headers: {
+            "Content-Type": 'application/json;charset=UTF-8',
+            Accept: "application/json"
+          }
         }).then(response => {
           response.json().then((data) => {
             if (data) {
