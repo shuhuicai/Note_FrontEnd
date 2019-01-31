@@ -6,6 +6,7 @@ import showImage from '../pages/file/showImage'
 import showFile from '../pages/file/showFile'
 import noteFile from '../pages/file/noteFile'
 import login from '../pages/login'
+import admin_home from '../pages/admin/home'
 
 Vue.use(Router)
 
@@ -40,6 +41,9 @@ export default new Router({
           component: noteFile
         }
       ]
-    },
+    }, {
+      path: '/admin/home',
+      component: admin_home,
+    }
   ]
 })
