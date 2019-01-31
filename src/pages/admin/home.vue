@@ -1,16 +1,26 @@
 <template>
   <div class="home">
     <admin_header class="headerArea"></admin_header>
+    <el-row>
+      <el-col :span="4">
+        <admin_menu></admin_menu>
+      </el-col>
+      <el-col :span="20">
+        <router-view></router-view>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script>
   import header from './components/header'
+  import menu from './components/menu'
   
   export default {
     name: "home",
     components: {
       admin_header: header,
+      admin_menu: menu,
     },
     data() {
       return {}

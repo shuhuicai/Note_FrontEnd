@@ -36,4 +36,9 @@
     left: 90%;
     top: 1.5em;
   }
+  
+  #exit:hover {
+    text-decoration: underline;
+    color: blue;
+  }
 </style>

@@ -44,6 +44,9 @@ export default new Router({
     }, {
       path: '/admin/home',
       component: admin_home,
+      children:[
+        
+      ]
     }
   ]
 })
