@@ -6,7 +6,9 @@ import showImage from '../pages/file/showImage'
 import showFile from '../pages/file/showFile'
 import noteFile from '../pages/file/noteFile'
 import login from '../pages/login'
-import admin_home from '../pages/admin/home'
+import adminHome from '../pages/admin/adminHome'
+import userList from '../pages/admin/pages/userList'
+import adminList from '../pages/admin/pages/adminList'
 
 Vue.use(Router)
 
@@ -43,9 +45,15 @@ export default new Router({
       ]
     }, {
       path: '/admin/home',
-      component: admin_home,
-      children:[
-        
+      component: adminHome,
+      children: [
+        {
+          path: '/admin/userList',
+          component: userList,
+        }, {
+          path: '/admin/adminList',
+          component: adminList
+        }
       ]
     }
   ]

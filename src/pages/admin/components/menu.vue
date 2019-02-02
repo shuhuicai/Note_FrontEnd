@@ -2,13 +2,15 @@
   <div class="menu">
     <el-menu
       default-active="2"
-      class="el-menu-vertical-demo">
+      class="el-menu-vertical-demo"
+      router>
       <el-submenu index="1">
         <template slot="title">
           <span>用户管理</span>
         </template>
         <el-menu-item-group>
-        
+          <el-menu-item index="/admin/adminList">管理员</el-menu-item>
+          <el-menu-item index="/admin/userList">普通用户</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       

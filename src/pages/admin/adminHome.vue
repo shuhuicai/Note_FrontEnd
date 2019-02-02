@@ -17,7 +17,7 @@
   import menu from './components/menu'
   
   export default {
-    name: "home",
+    name: "adminHome",
     components: {
       admin_header: header,
       admin_menu: menu,
