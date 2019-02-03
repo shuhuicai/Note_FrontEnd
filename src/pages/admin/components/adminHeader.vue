@@ -1,5 +1,5 @@
 <template>
-  <div class="header">
+  <div class="adminHeader">
     <span id="title">后台管理系统</span>
     <span id="welcome">欢迎：{{username}},<span id="exit" @click="toSignOut">[退出]</span></span>
   </div>
@@ -7,7 +7,7 @@
 
 <script>
   export default {
-    name: "header",
+    name: "adminHeader",
     data() {
       return {
         username: localStorage.getItem("username"),
@@ -24,7 +24,7 @@
 </script>
 
 <style scoped>
-  .header {
+  .adminHeader {
     width: 100%;
     height: 100%;
     background-color: gray;

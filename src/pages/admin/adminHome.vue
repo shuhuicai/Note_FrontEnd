@@ -13,21 +13,15 @@
 </template>
 
 <script>
-  import header from './components/header'
-  import menu from './components/menu'
+  import adminHeader from './components/adminHeader'
+  import adminMenu from './components/adminMenu'
   
   export default {
     name: "adminHome",
     components: {
-      admin_header: header,
-      admin_menu: menu,
+      admin_header: adminHeader,
+      admin_menu: adminMenu,
     },
-    data() {
-      return {}
-    },
-    methods() {
-    
-    }
   }
 </script>
 

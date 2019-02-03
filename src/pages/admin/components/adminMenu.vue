@@ -1,5 +1,5 @@
 <template>
-  <div class="menu">
+  <div class="adminMenu">
     <el-menu
       default-active="2"
       class="el-menu-vertical-demo"
@@ -48,7 +48,7 @@
 <script>
   
   export default {
-    name: "menu",
+    name: "adminMenu",
     components: {}
   }
 </script>
