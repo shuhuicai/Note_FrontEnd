@@ -1,7 +1,7 @@
 <template>
   <div class="userList">
     <el-table :data="tableData">
-      <el-table-column prop="id" label="id"></el-table-column>
+      <el-table-column prop="id" label="id" width="100"></el-table-column>
       <el-table-column prop="account" label="账号" width="100"></el-table-column>
       <el-table-column prop="creator" label="创建人" width="100"></el-table-column>
       <el-table-column prop="createTime" label="创建时间" width="100"></el-table-column>
@@ -18,6 +18,22 @@
         </template>
       </el-table-column>
     </el-table>
+    
+    <!--弹出的弹窗-->
+    <el-dialog title="修改信息" :visible.sync="modifyVisible">
+      <el-form :model="currentData">
+        <el-form-item label="姓名">
+          <el-input v-model="currentData.account"></el-input>
+        </el-form-item>
+        <el-form-item label="密码">
+          <el-input v-model="currentData.password"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="cancel">取消</el-button>
+        <el-button type="primary" @click="submitModify">确定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -29,7 +45,9 @@
         tableData: [],
         pageSize: 10,//一页显示的数量
         currentPage: 1,//当前页码下标值
-        total: 10,
+        total: 0,
+        currentData: {},
+        modifyVisible: false,
       }
     },
     created() {
@@ -44,7 +62,7 @@
         var queryCondition = {
           "page": 1,
           "pageSize": 10,
-          "role":1,
+          "role": 1,
         };
         fetch(url, {
           body: JSON.stringify(queryCondition),
@@ -67,9 +85,61 @@
             })
           },
           response => {
-          
+            this.$notify.error({
+              title: '提示',
+              message: '查询用户信息失败',
+            });
           });
-      }
+      },
+      /* 编辑用户信息 */
+      handleEdit(index, row) {
+        this.currentData = row;
+        this.modifyVisible = true;
+      },
+      /* 提交保存用户修改的信息 */
+      submitModify() {
+        var url = this.constant.serverURL + "/user/modifyUser";
+        var submitData = {
+          "account": this.currentData.account,
+          "password": this.currentData.password,
+          "id": this.currentData.id,
+        }
+        fetch(url, {
+          body: JSON.stringify(submitData),
+          cache: 'no-cache',
+          credentials: 'include',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer',
+          headers: {
+            "Content-Type": 'application/json;charset=UTF-8',
+            Accept: 'application/json'
+          }
+        }).then(response => {
+          response.json().then((data) => {
+            this.currentData.account = data.users[0].account;
+            this.currentData.password = data.users[0].password;
+            this.currentData.modifyTime = data.users[0].modifyTime;
+          });
+          this.$notify({
+            title: '成功',
+            message: '提交修改成功！',
+            type: 'success'
+          })
+        }, response => {
+          this.$notify.error({
+            title: '提示',
+            message: '修改失败',
+          });
+        })
+        this.modifyVisible = false;
+      },
+      /* 取消 */
+      cancel() {
+        this.modifyVisible = false;
+        this.currentData = {};
+      },
     }
   }
 </script>
