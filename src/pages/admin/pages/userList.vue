@@ -1,5 +1,8 @@
 <template>
   <div class="userList">
+    <!--查询条件-->
+    <query_form></query_form>
+    
     <el-table :data="tableData">
       <el-table-column prop="id" label="id" width="100"></el-table-column>
       <el-table-column prop="account" label="账号" width="100"></el-table-column>
@@ -38,14 +41,28 @@
 </template>
 
 <script>
+  import queryForm from '../components/queryForm'
+  
   export default {
     name: "userList",
+    components: {
+      query_form: queryForm,
+    },
+    mounted() {
+      this.$root.Bus.$on('updateUserList', value => {
+        // this.currentData = value.users;
+        this.tableData = value.users;
+        this.pageSize = value.pageSize;
+        this.currentPage = value.index;
+        this.total = value.total;
+      })
+    },
     data() {
       return {
         tableData: [],
         pageSize: 10,//一页显示的数量
         currentPage: 1,//当前页码下标值
-        total: 0,
+        total: 0,//总记录数
         currentData: {},
         modifyVisible: false,
       }
@@ -132,8 +149,9 @@
             title: '提示',
             message: '修改失败',
           });
-        })
+        });
         this.modifyVisible = false;
+        this.currentData = {};
       },
       /* 取消 */
       cancel() {
