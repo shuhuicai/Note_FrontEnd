@@ -7,9 +7,8 @@
     <el-input v-model="queryForm.account" placeholder="请输入账号" class="queryInput" clearable></el-input>
     <el-input v-model="queryForm.creator" placeholder="请输入创建人" class="queryInput" clearable></el-input>
     
-    <el-button type="primary" @click="queryUser">搜索</el-button>
+    <el-button type="primary" @click="toQuery">搜索</el-button>
     <el-button type="primary" @click="addBtn">新增</el-button>
-  
   </div>
 </template>
 
@@ -20,6 +19,7 @@
     name: "queryForm",
     data() {
       return {
+        page: 1,
         queryForm: {//查询条件
           account: "",
           creator: "",
@@ -27,7 +27,17 @@
         },
       }
     },
+    mounted() {
+      this.$root.Bus.$on('page', value => {
+        this.page = value;
+        this.queryUser();
+      });
+    },
     methods: {
+      toQuery() {
+        this.page = 1;
+        this.queryUser();
+      },
       /* 根据指定条件查询 */
       queryUser() {
         var createTime1, createTime2;
@@ -39,8 +49,8 @@
           createTime2 = "";
         }
         var queryConditions = {
-          "page": 1,
-          "pageSize": 10,
+          "page": this.page,
+          "pageSize": 3,
           "role": 1,
           "createTime1": createTime1,
           "createTime2": createTime2,

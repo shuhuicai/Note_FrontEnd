@@ -1,5 +1,5 @@
 <template>
-  <div class="userList">
+  <div class="userList" v-loading="loading" element-loading-text="拼命加载中……">
     <!--查询条件-->
     <query_form></query_form>
     
@@ -21,6 +21,14 @@
         </template>
       </el-table-column>
     </el-table>
+    
+    <!--分页-->
+    <div class="page">
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                     :current-page.sync="index" :page-size="pageSize" layout="prev, pager, next, jumper"
+                     :total="total">
+      </el-pagination>
+    </div>
     
     <!--弹出的弹窗-->
     <el-dialog title="修改信息" :visible.sync="modifyVisible">
@@ -48,37 +56,37 @@
     components: {
       query_form: queryForm,
     },
-    mounted() {
-      this.$root.Bus.$on('updateUserList', value => {
-        // this.currentData = value.users;
-        this.tableData = value.users;
-        this.pageSize = value.pageSize;
-        this.currentPage = value.index;
-        this.total = value.total;
-      })
-    },
     data() {
       return {
+        loading: true,
         tableData: [],
         pageSize: 10,//一页显示的数量
-        currentPage: 1,//当前页码下标值
+        index: 1,//当前页码下标值
         total: 0,//总记录数
         currentData: {},
         modifyVisible: false,
       }
     },
+    mounted() {
+      this.$root.Bus.$on('updateUserList', value => {
+        this.tableData = value.users;
+        this.pageSize = value.pageSize;
+        this.index = value.index;
+        this.total = value.total;
+      });
+    },
     created() {
       this.initData();
       setTimeout(() => {
         this.loading = false;
-      }, 1500)
+      }, 1500);
     },
     methods: {
       initData() {
         var url = this.constant.serverURL + "/user/queryUser";
         var queryCondition = {
           "page": 1,
-          "pageSize": 10,
+          "pageSize": 3,
           "role": 1,
         };
         fetch(url, {
@@ -98,7 +106,7 @@
               this.tableData = data.users;
               this.pageSize = data.pageSize;
               this.total = data.total;
-              this.currentPage = data.index;
+              this.index = data.index;
             })
           },
           response => {
@@ -113,6 +121,10 @@
         this.currentData = row;
         this.modifyVisible = true;
       },
+      /* 删除 */
+      handleDelete() {
+      
+      },
       /* 提交保存用户修改的信息 */
       submitModify() {
         var url = this.constant.serverURL + "/user/modifyUser";
@@ -120,7 +132,7 @@
           "account": this.currentData.account,
           "password": this.currentData.password,
           "id": this.currentData.id,
-        }
+        };
         fetch(url, {
           body: JSON.stringify(submitData),
           cache: 'no-cache',
@@ -141,7 +153,7 @@
           });
           this.$notify({
             title: '成功',
-            message: '提交修改成功！',
+            message: '修改成功！',
             type: 'success'
           })
         }, response => {
@@ -158,10 +170,21 @@
         this.modifyVisible = false;
         this.currentData = {};
       },
+      /* 换页 */
+      handleCurrentChange(val) {
+        this.$root.Bus.$emit('page', val);
+      },
+      /* 跳转到指定页面 */
+      handleSizeChange() {
+      
+      }
     }
   }
 </script>
 
 <style scoped>
-
+  .page {
+    margin-top: 10px;
+    float: right;
+  }
 </style>
