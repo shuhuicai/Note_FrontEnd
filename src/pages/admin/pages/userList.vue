@@ -126,8 +126,51 @@
         this.modifyVisible = true;
       },
       /* 删除 */
-      handleDelete() {
-      
+      handleDelete(index, row) {
+        this.$confirm('是否永久删除该记录？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        }).then(() => {
+          var url = this.constant.serverURL + "/user/deleteUser";
+          fetch(url, {
+            body: "id=" + row.id,
+            cache: 'no-cache',
+            credentials: 'include',
+            method: 'post',
+            mode: 'cors',
+            redirect: 'follow',
+            referrer: 'no-referrer',
+            headers: {
+              // "Content-Type": "application/json;charset=utf-8",
+              'Content-Type': 'application/x-www-form-urlencoded',
+              // Accept: 'application/json'
+            }
+          }).then(response => {
+            response.json().then((data) => {
+              if (data) {
+                this.$notify({
+                  title: '成功',
+                  message: '删除成功',
+                  type: 'success'
+                });
+                this.initData();
+              } else {
+                this.$notify({
+                  title: 'info',
+                  message: '未删除'
+                })
+              }
+            })
+          }, response => {
+            this.$notify.error({
+              title: '提示',
+              message: '删除失败'
+            })
+          });
+        }).catch(() => {//取消删除
+        })
+        
       },
       /* 提交保存用户修改的信息 */
       submitModify() {
