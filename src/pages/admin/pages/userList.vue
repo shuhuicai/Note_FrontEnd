@@ -74,6 +74,10 @@
         this.index = value.index;
         this.total = value.total;
       });
+      //添加用户后，刷新列表数据
+      this.$root.Bus.$on('notifyUpdate', value => {
+        this.initData();
+      });
     },
     created() {
       this.initData();
