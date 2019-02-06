@@ -12,6 +12,13 @@
       <el-table-column prop="password" label="密码" width="100"></el-table-column>
       <el-table-column prop="remarks" label="说明" width="100"></el-table-column>
       
+      <el-table-column prop="role" label="角色">
+        <template slot-scope="scope">
+          <span v-if="scope.row.role===0">管理员</span>
+          <span v-else>普通用户</span>
+        </template>
+      </el-table-column>
+      
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑
@@ -20,6 +27,7 @@
           </el-button>
         </template>
       </el-table-column>
+    
     </el-table>
     
     <!--分页-->
@@ -91,7 +99,7 @@
         var queryCondition = {
           "page": 1,
           "pageSize": 3,
-          "role": 1,
+          // "role": 1,
         };
         fetch(url, {
           body: JSON.stringify(queryCondition),

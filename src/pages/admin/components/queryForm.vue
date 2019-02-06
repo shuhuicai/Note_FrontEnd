@@ -79,7 +79,6 @@
         var queryConditions = {
           "page": this.page,
           "pageSize": 3,
-          "role": 1,
           "createTime1": createTime1,
           "createTime2": createTime2,
           "account": this.queryForm.account,

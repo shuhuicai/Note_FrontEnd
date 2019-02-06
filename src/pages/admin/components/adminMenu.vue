@@ -9,8 +9,7 @@
           <span>用户管理</span>
         </template>
         <el-menu-item-group>
-          <el-menu-item index="/admin/adminList">管理员</el-menu-item>
-          <el-menu-item index="/admin/userList">普通用户</el-menu-item>
+          <el-menu-item index="/admin/userList">用户列表</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       
