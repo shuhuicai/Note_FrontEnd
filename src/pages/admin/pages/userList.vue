@@ -77,7 +77,7 @@
     },
     mounted() {
       this.$root.Bus.$on('updateUserList', value => {
-        this.tableData = value.users;
+        this.tableData = value.lists;
         this.pageSize = value.pageSize;
         this.index = value.index;
         this.total = value.total;
@@ -115,7 +115,7 @@
           }
         }).then(response => {
             response.json().then((data) => {
-              this.tableData = data.users;
+              this.tableData = data.lists;
               this.pageSize = data.pageSize;
               this.total = data.total;
               this.index = data.index;
@@ -202,9 +202,9 @@
           }
         }).then(response => {
           response.json().then((data) => {
-            this.currentData.account = data.users[0].account;
-            this.currentData.password = data.users[0].password;
-            this.currentData.modifyTime = data.users[0].modifyTime;
+            this.currentData.account = data.lists[0].account;
+            this.currentData.password = data.lists[0].password;
+            this.currentData.modifyTime = data.lists[0].modifyTime;
           });
           this.$notify({
             title: '成功',

@@ -15,20 +15,20 @@
       
       <el-submenu index="2">
         <template slot="title">
-          <!--<i class="el-icon-document"></i>-->
-          <span>文件列表</span>
+          <span>文件夹管理</span>
         </template>
         <el-menu-item-group>
-          <!--<tagMenu></tagMenu>-->
+          <el-menu-item index="/admin/folderList">文件夹列表</el-menu-item>
         </el-menu-item-group>
       </el-submenu>
       
       <el-submenu index="3">
         <template slot="title">
-          <span>文件夹管理</span>
+          <!--<i class="el-icon-document"></i>-->
+          <span>文件列表</span>
         </template>
         <el-menu-item-group>
-        
+          <!--<tagMenu></tagMenu>-->
         </el-menu-item-group>
       </el-submenu>
       

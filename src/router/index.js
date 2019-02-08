@@ -8,6 +8,7 @@ import noteFile from '../pages/file/noteFile'
 import login from '../pages/login'
 import adminHome from '../pages/admin/adminHome'
 import userList from '../pages/admin/pages/userList'
+import folderList from '../pages/admin/pages/folderList'
 
 Vue.use(Router)
 
@@ -49,7 +50,10 @@ export default new Router({
         {
           path: '/admin/userList',
           component: userList,
-        },
+        }, {
+          path: '/admin/folderList',
+          component: folderList
+        }
       ]
     }
   ]
