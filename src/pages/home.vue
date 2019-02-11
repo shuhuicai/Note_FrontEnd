@@ -1,20 +1,14 @@
 <template>
   <div class="home">
-    <el-container>
-      <el-header>
-        <v-header></v-header>
-      </el-header>
-      <el-container>
-        <el-aside>
-          <v-menu></v-menu>
-        </el-aside>
-        <el-container>
-          <el-main>
-            <router-view></router-view>
-          </el-main>
-        </el-container>
-      </el-container>
-    </el-container>
+    <v-header class="headerArea"></v-header>
+    <el-row>
+      <el-col :span="5">
+        <v-menu></v-menu>
+      </el-col>
+      <el-col :span="19">
+        <router-view></router-view>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
@@ -35,5 +29,14 @@
   }
 
 </script>
-<style>
+<style scoped>
+  .home {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .headerArea {
+    width: 100%;
+    padding: 1.5em;
+  }
 </style>
