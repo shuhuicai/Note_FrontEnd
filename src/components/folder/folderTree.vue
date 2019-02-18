@@ -5,9 +5,11 @@
         <el-tree ref="tree" :data="folderData" node-key="id" draggable :expand-on-click-node="true">
             <span class="custom-tree-node" slot-scope="{ node, data }">
               <li v-if="data.isFolder==1" v-contextmenu:folderMenu @contextmenu="getNodeData(node,data)">
+                <i class="folder"></i>
                 <span v-if="data.remarks==0">{{ node.label}}</span>
                 <input v-model="label" v-else @blur="submitName">
               </li>
+              
               <li v-else v-contextmenu:fileMenu @dblclick="doubleClick(data)"
                   @contextmenu="getNodeData(node,data)">
                 <span v-if="data.remarks==0">{{node.label}}</span>
@@ -305,5 +307,15 @@
     justify-content: space-between;
     font-size: 14px;
     padding-right: 20em;
+  }
+  
+  .folder {
+    /*background:url(src/assets/sprite-4ce3c9eaa2.svg) no-repeat;*/
+    background: url(../../assets/sprite-4ce3c9eaa2.svg);
+    /*background:url(https://note.youdao.com/web/images/sprite-4ce3c9eaa2.svg);*/
+    background-position: 56.657223796033996% 47.747747747747745%;
+    width: 24px;
+    height: 24px;
+    display: inline-block;
   }
 </style>

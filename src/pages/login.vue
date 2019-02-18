@@ -40,7 +40,8 @@
           response.json().then((data) => {
             if (data) {
               localStorage.setItem("username", this.username);//保存用户名
-              this.$router.push({path: '/admin/home'});
+              // this.$router.push({path: '/admin/home'});
+              this.$router.push({path: '/home'});
             } else {
               this.$notify.error({
                 title: '提示',
