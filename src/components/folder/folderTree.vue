@@ -38,7 +38,7 @@
     
     <!--文件的情况-->
     <v-contextmenu ref="fileMenu">
-      <v-contextmenu-item>打开</v-contextmenu-item>
+      <v-contextmenu-item @click="openFile">打开</v-contextmenu-item>
       <v-contextmenu-item @click="remove">删除</v-contextmenu-item>
       <v-contextmenu-item @click="updateName">重命名</v-contextmenu-item>
     </v-contextmenu>
@@ -235,6 +235,13 @@
           this.$router.push({name: 'showImage', params: {imgURL: data.fileUrl}});
         } else {
           this.$router.push({name: 'showFile', params: {file_url: data.fileUrl}});
+        }
+      },
+      openFile() {
+        if (this.currentData.fileType == 0) {
+          this.$router.push({name: 'showImage', params: {imgURL: this.currentData.fileUrl}});
+        } else {
+          this.$router.push({name: 'showFile', params: {file_url: this.currentData.fileUrl}});
         }
       },
       cancel() {//取消按钮
