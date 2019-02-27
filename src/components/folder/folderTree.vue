@@ -1,74 +1,43 @@
-<template xmlns:v-contextmenu="http://www.w3.org/1999/xhtml">
+<template>
   <div>
     <div class="custom-tree-container">
       <div class="block">
-        <el-tree ref="tree" :data="folderData" node-key="id" draggable :expand-on-click-node="true">
+        <el-tree ref="tree" :data="folderData" node-key="id" :expand-on-click-node="true"
+                 @node-contextmenu="rightClick" @node-click="leftClick">
             <span class="custom-tree-node" slot-scope="{ node, data }">
-              <li v-if="data.isFolder==1" v-contextmenu:folderMenu @contextmenu="getNodeData(node,data)">
+              <li v-if="data.isFolder==1">
                 <i class="folder"></i>
                 <span v-if="data.remarks==0">{{ node.label}}</span>
-                <input v-model="label" v-else @blur="submitName">
+                <input v-model="label" v-else @blur="submitName" autofocus>
               </li>
               
-              <li v-else v-contextmenu:fileMenu @dblclick="doubleClick(data)"
-                  @contextmenu="getNodeData(node,data)">
+              <li v-else @dblclick="doubleClick(data)">
                 <span v-if="data.remarks==0">{{node.label}}</span>
-                <input v-model="label" v-else @blur="submitName">
+                <input v-model="label" v-else @blur="submitName" autofocus>
               </li>
           </span>
         </el-tree>
       </div>
     </div>
     
-    <!--文件夹的情况-->
-    <v-contextmenu ref="folderMenu">
-      <v-contextmenu-submenu title="创建">
-        <v-contextmenu-item @click="popupDialog(false)">文件夹</v-contextmenu-item>
-        <v-contextmenu-item @click="createNote">笔记</v-contextmenu-item>
-        <v-contextmenu-item>Markdown</v-contextmenu-item>
-      </v-contextmenu-submenu>
-      <v-contextmenu-submenu title="上传">
-        <v-contextmenu-item @click="toUploadPage(0)">图片</v-contextmenu-item>
-        <v-contextmenu-item @click="toUploadPage(1)">pdf</v-contextmenu-item>
-        <v-contextmenu-item @click="toUploadPage(2)">word</v-contextmenu-item>
-      </v-contextmenu-submenu>
-      <v-contextmenu-item @click="remove">删除</v-contextmenu-item>
-      <v-contextmenu-item @click="updateName">重命名</v-contextmenu-item>
-    </v-contextmenu>
-    
-    <!--文件的情况-->
-    <v-contextmenu ref="fileMenu">
-      <v-contextmenu-item @click="openFile">打开</v-contextmenu-item>
-      <v-contextmenu-item @click="remove">删除</v-contextmenu-item>
-      <v-contextmenu-item @click="updateName">重命名</v-contextmenu-item>
-    </v-contextmenu>
-    
-    <el-dialog title="创建" :visible.sync="dialogVisible" width="20%" :modal-append-to-body="false">
-      <!--文件夹-->
-      <el-form v-if="!isFile">
-        <el-form-item label="文件夹名">
-          <el-input v-model="dialogData.folderName" auto-complete="off" placeholder="请输入文件夹名"></el-input>
-        </el-form-item>
-      </el-form>
+    <div v-show="menuVisible">
       
-      <!--文件-->
-      <el-form v-else :model="dialogData">
-        <el-form-item label="文件名">
-          <el-input v-model="dialogData.name" auto-complete="off" placeholder="请输入文件名"></el-input>
-        </el-form-item>
-        
-        <el-form-item label="类型">
-          <el-select v-model="dialogData.type" placeholder="类型">
-            <el-option label="pdf" value="1"></el-option>
-            <el-option label="word" value="0"></el-option>
-          </el-select>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="confirm" type="primary">确定</el-button>
-        <el-button @click="cancel">取消</el-button>
-      </div>
-    </el-dialog>
+      <el-menu id="rightClickMenu" class="el-menu-vertical" @select="handleRightSelect">
+        <el-menu-item index="1" class="menuItem">
+          <span slot="title">创建</span>
+        </el-menu-item>
+        <el-menu-item index="2" class="menuItem">
+          <span slot="title">上传</span>
+        </el-menu-item>
+        <el-menu-item index="3" class="menuItem">
+          <span slot="title">删除</span>
+        </el-menu-item>
+        <hr style="color: #ffffff">
+        <el-menu-item index="4" class="menuItem">
+          <span slot="title">重命名</span>
+        </el-menu-item>
+      </el-menu>
+    </div>
   </div>
 </template>
 
@@ -85,9 +54,10 @@
           folderName: '',
         },
         isFile: false,//区分是创建文件还是文件夹
-        currentData: {},
+        currentData: {},//当前选中的节点
         currentNote: {},
         label: '',
+        menuVisible: false,
       }
     },
     
@@ -123,6 +93,54 @@
           response => {
           })
       },
+      
+      /* 点击节点 */
+      leftClick(data, node, element) {
+        if (this.menuVisible) {
+          this.menuVisible = false;
+        }
+      },
+      
+      /* 右键 */
+      rightClick(event, data, node, element) {
+        if (this.currentData.id !== data.id) {
+          this.currentData = data;
+          this.currentNode = node;
+          this.menuVisible = true;
+        } else {
+          this.menuVisible = !this.menuVisible;
+        }
+        document.addEventListener('click', (e) => {
+          this.menuVisible = false;
+        });
+        let menu = document.querySelector("#rightClickMenu");
+        menu.style.left = event.clientX + 30 + "px";
+        menu.style.top = event.clientY + 10 + "px";
+        // menu.style.position="absolute";//为新创建的DIV指定绝对定位
+        menu.style.position = "fixed";
+        menu.style.width = 160 + "px";
+      },
+      
+      /* 点击右键菜单 */
+      handleRightSelect(key) {
+        if (key == 1) {//创建
+        
+        } else if (key == 2) {//上传
+        
+        } else if (key == 3) {//删除
+        
+        } else if (key == 4) {//重命名
+          this.updateName();
+        }
+        this.menuVisible = false;
+      },
+      
+      /* 重命名 */
+      updateName() {
+        this.currentData.remarks = 1;
+        this.label = this.currentNode.label;
+      },
+      
       /* 跳转到创建笔记 */
       createNote() {
         this.$router.push({
@@ -131,18 +149,6 @@
             id: this.currentData.id,
           }
         });
-      },
-      /*弹出对话框*/
-      popupDialog(isFile) {
-        // console.log(vm.$vnode.child.$$contextmenu.$parent.node.data);
-        this.isFile = isFile;
-        this.dialogVisible = true;
-      },
-      
-      /*获取当前右键点击的文件夹数据*/
-      getNodeData(node, data) {
-        this.currentData = data;
-        this.currentNode = node;
       },
       
       /* 新建文件夹 */
@@ -210,25 +216,6 @@
         }, response => {
         })
       },
-      
-      /* 确定按钮 */
-      confirm() {
-        if (this.isFile) {//文件
-          if (this.dialogData.type != '' && this.dialogData.name != '') {
-            this.dialogVisible = false;
-            this.append();
-          } else {
-            alert("请输入名字和类型");
-          }
-        } else {//文件夹
-          if (this.dialogData.folderName != '') {
-            this.dialogVisible = false;
-            this.append();
-          } else {
-            alert("请输入文件夹名");
-          }
-        }
-      },
       /*双击文件*/
       doubleClick(data) {
         if (data.fileType == 0) {
@@ -244,11 +231,6 @@
           this.$router.push({name: 'showFile', params: {file_url: this.currentData.fileUrl}});
         }
       },
-      cancel() {//取消按钮
-        this.dialogData.name = '';
-        this.dialogData.type = '';
-        this.dialogVisible = false;
-      },
       //跳转到上传文件的页面
       toUploadPage(fileType) {
         this.$router.push({
@@ -259,48 +241,47 @@
           }
         });
       },
-      /* 重命名 */
-      updateName() {
-        this.currentData.remarks = 1;
-        this.label = this.currentNode.label;
-      },
+      
       /* 更新新名字到服务器 */
       submitName() {
         this.currentData.remarks = 0;
-        var temp = this.currentData.label;
-        this.currentData.label = this.label;
-        fetch(this.constant.serverURL + "/folder/updateLabel", {
-          body: JSON.stringify({
-            "id": this.currentData.id,
-            "label": this.currentData.label
-          }),
-          cache: 'no-cache',
-          credentials: 'same-origin',
-          method: 'POST',
-          mode: 'cors',
-          redirect: 'follow',
-          referrer: 'no-referrer',
-          headers: {
-            "Content-Type": 'application/json;charset=UTF-8',
-            Accept: "application/json"
-          }
-        }).then(response => {
-          response.json().then((data) => {
-            if (!data) {
-              this.currentData.label = temp;
-              this.$notify.error({
-                title: '提示',
-                message: '更新失败',
-              });
+        //先判断有没有更改内容，有的话再提交请求
+        if (this.label != this.currentData.label) {
+          var temp = this.currentData.label;
+          this.currentData.label = this.label;
+          fetch(this.constant.serverURL + "/folder/updateLabel", {
+            body: JSON.stringify({
+              "id": this.currentData.id,
+              "label": this.label
+            }),
+            cache: 'no-cache',
+            credentials: 'same-origin',
+            method: 'POST',
+            mode: 'cors',
+            redirect: 'follow',
+            referrer: 'no-referrer',
+            headers: {
+              "Content-Type": 'application/json;charset=UTF-8',
+              Accept: "application/json"
             }
+          }).then(response => {
+            response.json().then((data) => {
+              if (!data) {
+                this.currentData.label = temp;
+                this.$notify.error({
+                  title: '提示',
+                  message: '更新失败',
+                });
+              }
+            })
+          }, response => {
+            this.currentData.label = temp;
+            this.$notify.error({
+              title: '提示',
+              message: '更新失败',
+            });
           })
-        }, response => {
-          this.currentData.label = temp;
-          this.$notify.error({
-            title: '提示',
-            message: '更新失败',
-          });
-        })
+        }
       }
     }
   }
