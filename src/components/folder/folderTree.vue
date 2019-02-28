@@ -20,8 +20,8 @@
       </div>
     </div>
     
+    <!--右键菜单-->
     <div v-show="menuVisible">
-      
       <el-menu id="rightClickMenu" class="el-menu-vertical" @select="handleRightSelect">
         <el-menu-item index="1" class="menuItem">
           <span slot="title">创建</span>
@@ -38,6 +38,19 @@
         </el-menu-item>
       </el-menu>
     </div>
+    
+    <!--确定是否删除-->
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%"
+      center>
+      <span>是否确定删除？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="removeFileOrFolder">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -116,7 +129,7 @@
         let menu = document.querySelector("#rightClickMenu");
         menu.style.left = event.clientX + 30 + "px";
         menu.style.top = event.clientY + 10 + "px";
-        // menu.style.position="absolute";//为新创建的DIV指定绝对定位
+        //为新创建的DIV指定绝对定位
         menu.style.position = "fixed";
         menu.style.width = 160 + "px";
       },
@@ -128,7 +141,7 @@
         } else if (key == 2) {//上传
         
         } else if (key == 3) {//删除
-        
+          this.popConfirm();
         } else if (key == 4) {//重命名
           this.updateName();
         }
@@ -139,6 +152,39 @@
       updateName() {
         this.currentData.remarks = 1;
         this.label = this.currentNode.label;
+      },
+      
+      /* 弹出确定删除窗口 */
+      popConfirm() {
+        this.dialogVisible = true;
+      },
+      
+      /* 提交删除文件夹或文件请求 */
+      removeFileOrFolder() {
+        this.dialogVisible = false;
+        const parent = this.currentNode.parent;
+        const children = parent.data.children || parent.data;
+        const index = children.findIndex(d => d.id === this.currentData.id);
+        fetch(this.constant.serverURL + "/folder/deleteFolder", {
+          body: JSON.stringify(this.currentData),
+          cache: 'no-cache',
+          credentials: 'same-origin',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer',
+          headers: {
+            "Content-Type": 'application/json;charset=UTF-8',
+            Accept: "application/json"
+          }
+        }).then(response => {
+          response.json().then((data) => {
+            if (data) {
+              children.splice(index, 1);
+            }
+          })
+        }, response => {
+        })
       },
       
       /* 跳转到创建笔记 */
@@ -191,31 +237,6 @@
         })
       },
       
-      remove() {//删除文件夹或文件
-        const parent = this.currentNode.parent;
-        const children = parent.data.children || parent.data;
-        const index = children.findIndex(d => d.id === this.currentData.id);
-        fetch(this.constant.serverURL + "/folder/deleteFolder", {
-          body: JSON.stringify(this.currentData),
-          cache: 'no-cache',
-          credentials: 'same-origin',
-          method: 'POST',
-          mode: 'cors',
-          redirect: 'follow',
-          referrer: 'no-referrer',
-          headers: {
-            "Content-Type": 'application/json;charset=UTF-8',
-            Accept: "application/json"
-          }
-        }).then(response => {
-          response.json().then((data) => {
-            if (data) {
-              children.splice(index, 1);
-            }
-          })
-        }, response => {
-        })
-      },
       /*双击文件*/
       doubleClick(data) {
         if (data.fileType == 0) {
@@ -242,7 +263,7 @@
         });
       },
       
-      /* 更新新名字到服务器 */
+      /* 更新新文件名到服务器 */
       submitName() {
         this.currentData.remarks = 0;
         //先判断有没有更改内容，有的话再提交请求
