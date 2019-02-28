@@ -22,18 +22,27 @@
     
     <!--右键菜单-->
     <div v-show="menuVisible">
-      <el-menu id="rightClickMenu" class="el-menu-vertical" @select="handleRightSelect">
-        <el-menu-item index="1" class="menuItem">
+      <el-menu id="rightClickMenu" class="el-menu-vertical" @select="handleRightSelect" mode="vertical">
+        <el-menu-item index="1" class="menuItem" v-show="openVisible">
+          <span slot="title">打开</span>
+        </el-menu-item>
+        <el-menu-item index="2" class="menuItem" v-show="!openVisible">
           <span slot="title">创建</span>
         </el-menu-item>
-        <el-menu-item index="2" class="menuItem">
+        <el-menu-item index="3" class="menuItem" v-show="!openVisible">
           <span slot="title">上传</span>
         </el-menu-item>
-        <el-menu-item index="3" class="menuItem">
+        <!--<el-submenu index="2">
+          <span slot="title">上传</span>
+          <el-menu-item index="2-1">图片</el-menu-item>
+          &lt;!&ndash;<el-menu-item index="2-2">PDF文档</el-menu-item>
+          <el-menu-item index="2-3">WORD文档</el-menu-item>&ndash;&gt;
+        </el-submenu>-->
+        <el-menu-item index="4" class="menuItem">
           <span slot="title">删除</span>
         </el-menu-item>
         <hr style="color: #ffffff">
-        <el-menu-item index="4" class="menuItem">
+        <el-menu-item index="5" class="menuItem">
           <span slot="title">重命名</span>
         </el-menu-item>
       </el-menu>
@@ -71,6 +80,7 @@
         currentNote: {},
         label: '',
         menuVisible: false,
+        openVisible: false,//右键菜单中是否显示“打开”菜单项，显示时为右击文件
       }
     },
     
@@ -119,6 +129,11 @@
         if (this.currentData.id !== data.id) {
           this.currentData = data;
           this.currentNode = node;
+          if (data.isFolder != 1) {
+            this.openVisible = true;
+          } else {
+            this.openVisible = false;
+          }
           this.menuVisible = true;
         } else {
           this.menuVisible = !this.menuVisible;
@@ -136,13 +151,15 @@
       
       /* 点击右键菜单 */
       handleRightSelect(key) {
-        if (key == 1) {//创建
+        if (key == 1) {//打开
+          this.openFile();
+        } else if (key == 2) {//创建
         
-        } else if (key == 2) {//上传
-        
-        } else if (key == 3) {//删除
+        } else if (key == 3) {//上传
+          
+        } else if (key == 4) {//删除
           this.popConfirm();
-        } else if (key == 4) {//重命名
+        } else if (key == 5) {//重命名
           this.updateName();
         }
         this.menuVisible = false;
