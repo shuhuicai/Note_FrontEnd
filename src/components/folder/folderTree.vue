@@ -75,7 +75,6 @@
           type: '',
           folderName: '',
         },
-        isFile: false,//区分是创建文件还是文件夹
         currentData: {},//当前选中的节点
         currentNote: {},
         label: '',
@@ -154,9 +153,9 @@
         if (key == 1) {//打开
           this.openFile();
         } else if (key == 2) {//创建
-        
+          this.append();
         } else if (key == 3) {//上传
-          
+        
         } else if (key == 4) {//删除
           this.popConfirm();
         } else if (key == 5) {//重命名
@@ -204,33 +203,15 @@
         })
       },
       
-      /* 跳转到创建笔记 */
-      createNote() {
-        this.$router.push({
-          name: 'noteFile',
-          params: {
-            id: this.currentData.id,
-          }
-        });
-      },
-      
       /* 新建文件夹 */
       append() {
-        var sendData = {};
-        if (this.isFile) {
-          sendData = {
-            "label": this.dialogData.name,
-            "parentId": this.currentData.id,
-            "isFolder": 0
-          };
-        } else {
-          sendData = {
-            "label": this.dialogData.folderName,
-            "parentId": this.currentData.id,
-            "isFolder": 1,
-            "fileType": -1
-          };
-        }
+        // 先向后台发送一个名字为“新建文件夹”的新建请求，保存成功再修改文件夹名
+        var sendData = {
+          "label": "新建文件夹",
+          "parentId": this.currentData.id,
+          "isFolder": 1,
+          "fileType": -1
+        };
         fetch(this.constant.serverURL + "/folder/createFolder", {
           body: JSON.stringify(sendData),
           cache: 'no-cache',
@@ -249,9 +230,27 @@
               this.$set(this.currentData, 'children', []);
             }
             this.currentData.children.push(newChild);
+            //数据填充后，开始修改名字
+            this.currentData = data;
+            this.currentData.remarks = 1;
+            this.label = "新建文件夹";
           })
         }, response => {
+          this.$notify.error({
+            title: '提示',
+            message: '内部错误',
+          });
         })
+      },
+      
+      /* 跳转到创建笔记 */
+      createNote() {
+        this.$router.push({
+          name: 'noteFile',
+          params: {
+            id: this.currentData.id,
+          }
+        });
       },
       
       /*双击文件*/
