@@ -25,9 +25,6 @@
         <el-menu-item index="1" v-show="openVisible">
           <span slot="title">打开</span>
         </el-menu-item>
-        <!--<el-menu-item index="2" v-show="!openVisible">
-          <span slot="title">创建</span>
-        </el-menu-item>-->
         <el-menu-item-group v-show="!openVisible">
           <template slot="title">创建</template>
           <el-menu-item index="2-1">文件夹</el-menu-item>
