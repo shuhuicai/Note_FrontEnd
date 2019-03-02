@@ -115,9 +115,9 @@
       
       /* 右键 */
       rightClick(event, data, node, element) {
+        this.currentData = data;
+        this.currentNode = node;
         if (this.currentData.id !== data.id) {
-          this.currentData = data;
-          this.currentNode = node;
           if (data.isFolder != 1) {
             this.openVisible = true;
           } else {
