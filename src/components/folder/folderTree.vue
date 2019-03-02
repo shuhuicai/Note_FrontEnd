@@ -25,9 +25,14 @@
         <el-menu-item index="1" v-show="openVisible">
           <span slot="title">打开</span>
         </el-menu-item>
-        <el-menu-item index="2" v-show="!openVisible">
+        <!--<el-menu-item index="2" v-show="!openVisible">
           <span slot="title">创建</span>
-        </el-menu-item>
+        </el-menu-item>-->
+        <el-menu-item-group v-show="!openVisible">
+          <template slot="title">创建</template>
+          <el-menu-item index="2-1">文件夹</el-menu-item>
+          <el-menu-item index="2-2">笔记</el-menu-item>
+        </el-menu-item-group>
         <el-menu-item-group v-show="!openVisible">
           <template slot="title">上传</template>
           <el-menu-item index="3-1">图片</el-menu-item>
@@ -117,15 +122,13 @@
       rightClick(event, data, node, element) {
         this.currentData = data;
         this.currentNode = node;
-        if (this.currentData.id !== data.id) {
-          if (data.isFolder != 1) {
-            this.openVisible = true;
+        this.menuVisible=!this.menuVisible;
+        if (this.menuVisible) {
+          if (data.isFolder!=1) {
+            this.openVisible=true;
           } else {
-            this.openVisible = false;
+            this.openVisible=false;
           }
-          this.menuVisible = true;
-        } else {
-          this.menuVisible = !this.menuVisible;
         }
         document.addEventListener('click', (e) => {
           this.menuVisible = false;
@@ -142,8 +145,12 @@
       handleRightSelect(key) {
         if (key == 1) {//打开
           this.openFile();
-        } else if (key == 2) {//创建
+        } else if (key == "2-1") {//创建
+          //文件夹
           this.append();
+        } else if (key == "2-2") {
+          //笔记
+          this.createNote();
         } else if (key == "3-1") {//上传
           //图片
           this.toUploadPage(0);
