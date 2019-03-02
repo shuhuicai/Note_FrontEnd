@@ -20,29 +20,24 @@
       </div>
     </div>
     
-    <!--右键菜单-->
     <div v-show="menuVisible">
-      <el-menu id="rightClickMenu" class="el-menu-vertical" @select="handleRightSelect" mode="vertical">
-        <el-menu-item index="1" class="menuItem" v-show="openVisible">
+      <el-menu id="rightClickMenu" @select="handleRightSelect" mode="horizontal">
+        <el-menu-item index="1" v-show="openVisible">
           <span slot="title">打开</span>
         </el-menu-item>
-        <el-menu-item index="2" class="menuItem" v-show="!openVisible">
+        <el-menu-item index="2" v-show="!openVisible">
           <span slot="title">创建</span>
         </el-menu-item>
-        <el-menu-item index="3" class="menuItem" v-show="!openVisible">
-          <span slot="title">上传</span>
-        </el-menu-item>
-        <!--<el-submenu index="2">
-          <span slot="title">上传</span>
-          <el-menu-item index="2-1">图片</el-menu-item>
-          &lt;!&ndash;<el-menu-item index="2-2">PDF文档</el-menu-item>
-          <el-menu-item index="2-3">WORD文档</el-menu-item>&ndash;&gt;
-        </el-submenu>-->
-        <el-menu-item index="4" class="menuItem">
+        <el-menu-item-group v-show="!openVisible">
+          <template slot="title">上传</template>
+          <el-menu-item index="3-1">图片</el-menu-item>
+          <el-menu-item index="3-2">PDF文档</el-menu-item>
+          <el-menu-item index="3-3">WORD文档</el-menu-item>
+        </el-menu-item-group>
+        <el-menu-item index="4">
           <span slot="title">删除</span>
         </el-menu-item>
-        <hr style="color: #ffffff">
-        <el-menu-item index="5" class="menuItem">
+        <el-menu-item index="5">
           <span slot="title">重命名</span>
         </el-menu-item>
       </el-menu>
@@ -70,16 +65,11 @@
       return {
         folderData: [],
         dialogVisible: false,
-        dialogData: {
-          name: '',
-          type: '',
-          folderName: '',
-        },
         currentData: {},//当前选中的节点
         currentNote: {},
         label: '',
         menuVisible: false,
-        openVisible: false,//右键菜单中是否显示“打开”菜单项，显示时为右击文件
+        openVisible: false,//右键菜单中是否显示“打开”“上传”等菜单项，右击文件夹时显示
       }
     },
     
@@ -154,8 +144,15 @@
           this.openFile();
         } else if (key == 2) {//创建
           this.append();
-        } else if (key == 3) {//上传
-        
+        } else if (key == "3-1") {//上传
+          //图片
+          this.toUploadPage(0);
+        } else if (key == "3-2") {
+          //pdf
+          this.toUploadPage(1);
+        } else if (key == "3-3") {
+          //word
+          this.toUploadPage(2);
         } else if (key == 4) {//删除
           this.popConfirm();
         } else if (key == 5) {//重命名
