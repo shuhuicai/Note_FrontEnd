@@ -263,11 +263,12 @@
         }
       },
       openFile() {
-        if (this.currentData.fileType == 0) {
+        /*if (this.currentData.fileType == 0) {
           this.$router.push({name: 'showImage', params: {imgURL: this.currentData.fileUrl}});
         } else {
           this.$router.push({name: 'showFile', params: {file_url: this.currentData.fileUrl}});
-        }
+        }*/
+        this.doubleClick(this.currentData);
       },
       //跳转到上传文件的页面
       toUploadPage(fileType) {
@@ -284,7 +285,7 @@
       submitName() {
         this.currentData.remarks = 0;
         //先判断有没有更改内容，有的话再提交请求
-        if (this.label != this.currentData.label) {
+        if (this.label != this.currentData.label && this.label.trim()!='') {
           var temp = this.currentData.label;
           this.currentData.label = this.label;
           fetch(this.constant.serverURL + "/folder/updateLabel", {
