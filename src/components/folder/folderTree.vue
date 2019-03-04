@@ -119,12 +119,12 @@
       rightClick(event, data, node, element) {
         this.currentData = data;
         this.currentNode = node;
-        this.menuVisible=!this.menuVisible;
+        this.menuVisible = !this.menuVisible;
         if (this.menuVisible) {
-          if (data.isFolder!=1) {
-            this.openVisible=true;
+          if (data.isFolder != 1) {
+            this.openVisible = true;
           } else {
-            this.openVisible=false;
+            this.openVisible = false;
           }
         }
         document.addEventListener('click', (e) => {
@@ -256,10 +256,18 @@
       
       /*双击文件*/
       doubleClick(data) {
-        if (data.fileType == 0) {
+        if (data.fileType == 0) {//图片
           this.$router.push({name: 'showImage', params: {imgURL: data.fileUrl}});
-        } else {
+        } else if (data.fileType == 1) {//pdf
           this.$router.push({name: 'showFile', params: {file_url: data.fileUrl}});
+        } else if (data.fileType == 3) {//富文本
+          this.$router.push({
+            name: 'noteFile',
+            params: {
+              id: data.id,
+              hadCreated: true
+            }
+          });
         }
       },
       openFile() {
@@ -285,7 +293,7 @@
       submitName() {
         this.currentData.remarks = 0;
         //先判断有没有更改内容，有的话再提交请求
-        if (this.label != this.currentData.label && this.label.trim()!='') {
+        if (this.label != this.currentData.label && this.label.trim() != '') {
           var temp = this.currentData.label;
           this.currentData.label = this.label;
           fetch(this.constant.serverURL + "/folder/updateLabel", {

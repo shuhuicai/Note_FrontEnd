@@ -1,6 +1,6 @@
 <template>
   <div class="noteFile">
-    <el-input type="text" v-model="noteName"/>
+    <el-input type="text" v-model="noteName" placeholder="请输入笔记名"/>
     <!--:config="editorOption"-->
     
     <!--@blur="onEditorBlur($event)"
@@ -10,8 +10,7 @@
     <quill-editor ref="myTextEditor"
                   v-model="content"
                   :options="editorOption"></quill-editor>
-    <button @click="printContextToConsole">print</button>
-    <button @click="createNote">保存</button>
+    <el-button @click="createNote">保存</el-button>
   </div>
 </template>
 
@@ -26,7 +25,9 @@
     data() {
       return {
         noteName: '',
-        content: '<h2>I am Example</h2>',
+        id: '',//笔记id值
+        hadCreated: false,//标注是否是要修改笔记（true）或新建笔记(false)
+        content: '',
         editorOption: {
           // something config
           // theme:'bubble'
@@ -50,6 +51,13 @@
         }
       }
     },
+    created() {
+      this.id = this.$route.params.id;
+      this.hadCreated = this.$route.params.hadCreated;
+      if (this.hadCreated) {
+        this.initNote();
+      }
+    },
     components: {
       quillEditor
     },
@@ -63,15 +71,12 @@
       onEditorReady() {
         // console.log("onEditorReady method");
       },
-      printContextToConsole() {
-        console.log(this.content);
-      },
       /* 保存笔记 */
       createNote() {
         fetch(this.constant.serverURL + "/file/saveNote", {
           body: JSON.stringify({
             "parentId": this.$route.params.id,
-            "noteName": this.noteName,
+            "label": this.noteName,
             "content": this.content
           }),
           cache: 'no-cache',
@@ -106,7 +111,28 @@
             message: '内部错误',
           });
         });
-      }
+      },
+      /* 当为已经创建完打开笔记的情况下，根据id值请求该笔记相关数据 */
+      initNote() {
+        fetch(this.constant.serverURL + "/file/initNote?id=" + this.id, {
+          cache: 'no-cache',
+          credentials: 'same-origin',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer',
+          headers: {
+            Accept: "application/json"
+          }
+        }).then(response => {
+          response.json().then((data) => {
+            this.noteName = data.label;
+            this.content = data.content;
+          })
+        }, response => {
+          console.log(response);
+        });
+      },
     },
   }
 </script>
