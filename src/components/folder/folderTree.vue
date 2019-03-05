@@ -69,6 +69,7 @@
         dialogVisible: false,
         currentData: {},//当前选中的节点
         currentNote: {},
+        openNoteData: {},//记录当前正打开的笔记的data节点
         label: '',
         menuVisible: false,
         openVisible: false,//右键菜单中是否显示“打开”“上传”等菜单项，右击文件夹时显示
@@ -84,7 +85,10 @@
     mounted() {
       this.$root.Bus.$on('updateFolder', value => {
         this.$refs.tree.append(value, value.parentId);//将文件名字添加到目录
-      })
+      });
+      this.$root.Bus.$on('updateName', value => {
+        this.openNoteData.label = value;//更新文件名
+      });
     },
     methods: {
       /*初始化左边文件夹结构*/
@@ -261,6 +265,7 @@
         } else if (data.fileType == 1) {//pdf
           this.$router.push({name: 'showFile', params: {file_url: data.fileUrl}});
         } else if (data.fileType == 3) {//富文本
+          this.openNoteData = data;
           this.$router.push({
             name: 'noteFile',
             params: {
@@ -271,11 +276,6 @@
         }
       },
       openFile() {
-        /*if (this.currentData.fileType == 0) {
-          this.$router.push({name: 'showImage', params: {imgURL: this.currentData.fileUrl}});
-        } else {
-          this.$router.push({name: 'showFile', params: {file_url: this.currentData.fileUrl}});
-        }*/
         this.doubleClick(this.currentData);
       },
       //跳转到上传文件的页面

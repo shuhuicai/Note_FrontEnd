@@ -1,16 +1,10 @@
 <template>
   <div class="noteFile">
     <el-input type="text" v-model="noteName" placeholder="请输入笔记名"/>
-    <!--:config="editorOption"-->
-    
-    <!--@blur="onEditorBlur($event)"
-    @focus="onEditorFocus($event)"
-    @ready="onEditorReady($event)"
-    @change="onEditorChange($event)"-->
     <quill-editor ref="myTextEditor"
                   v-model="content"
                   :options="editorOption"></quill-editor>
-    <el-button @click="createNote">保存</el-button>
+    <el-button @click="saveNote" type="primary">保存</el-button>
   </div>
 </template>
 
@@ -25,9 +19,11 @@
     data() {
       return {
         noteName: '',
+        noteName_backup: '',//备份好名字，修改时有改动再提交请求
         id: '',//笔记id值
         hadCreated: false,//标注是否是要修改笔记（true）或新建笔记(false)
         content: '',
+        content_backup: '',
         editorOption: {
           // something config
           // theme:'bubble'
@@ -62,16 +58,16 @@
       quillEditor
     },
     methods: {
-      onEditorBlur() {
-        // console.log("onEditorBlur method");
-      },
-      onEditorFocus() {
-        // console.log("onEditorFocus method");
-      },
-      onEditorReady() {
-        // console.log("onEditorReady method");
-      },
       /* 保存笔记 */
+      saveNote() {
+        if (this.hadCreated) {
+          this.updateNote();
+        } else {
+          this.createNote();
+        }
+      },
+      
+      /* 创建笔记 */
       createNote() {
         fetch(this.constant.serverURL + "/file/saveNote", {
           body: JSON.stringify({
@@ -128,11 +124,60 @@
           response.json().then((data) => {
             this.noteName = data.label;
             this.content = data.content;
+            this.noteName_backup = data.label;//备份
+            this.content_backup = data.content;
           })
         }, response => {
           console.log(response);
         });
       },
+      
+      updateNote() {
+        const send_data = {};
+        send_data.id = this.id;
+        if (this.noteName_backup != this.noteName) {
+          send_data.label = this.noteName;
+        }
+        if (this.content_backup != this.content) {
+          send_data.content = this.content;
+        }
+        fetch(this.constant.serverURL + "/file/updateNote", {
+          body: JSON.stringify(send_data),
+          cache: 'no-cache',
+          credentials: 'same-origin',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer',
+          headers: {
+            "Content-Type": 'application/json;charset=UTF-8',
+            Accept: "application/json"
+          }
+        }).then(response => {
+          response.json().then((data) => {
+            if (data) {
+              this.noteName_backup = this.noteName;
+              this.content_backup = this.content;
+              this.$root.Bus.$emit('updateName', this.noteName);//将数据通过EventBus的形式传到FolderTree组件，通知更新名字
+              this.$notify({
+                title: '成功',
+                message: '保存成功',
+                type: 'success'
+              });
+            } else {
+              this.$notify.error({
+                title: '提示',
+                message: '保存失败',
+              });
+            }
+          })
+        }, response => {
+          this.$notify.error({
+            title: '提示',
+            message: '内部错误',
+          });
+        });
+      }
     },
   }
 </script>
