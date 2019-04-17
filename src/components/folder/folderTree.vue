@@ -334,7 +334,7 @@
   }
 </script>
 
-<style scoped>
+<style>
   .custom-tree-node {
     flex: 1;
     display: flex;
@@ -342,6 +342,11 @@
     justify-content: space-between;
     font-size: 14px;
     padding-right: 20em;
+  }
+  
+  /*点击背景颜色*/
+  .el-tree-node:focus > .el-tree-node__content {
+    background-color: #ff2126;
   }
   
   .folder {
