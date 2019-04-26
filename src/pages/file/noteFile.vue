@@ -1,7 +1,10 @@
 <template>
   <div class="noteFile">
-    <el-input type="text" v-model="noteName" placeholder="请输入笔记名"/>
+    <el-input type="text" v-model="noteName" placeholder="请输入笔记名" class="note_name"/>
+    <i class="icon-tag" @click="showTag"></i>
+    <tag_component class="tagArea" v-show="tagVisible" v-bind:note_id="id"></tag_component>
     <quill-editor ref="myTextEditor"
+                  class="quill_editor"
                   v-model="content"
                   :options="editorOption"></quill-editor>
     <el-button @click="saveNote" type="primary">保存</el-button>
@@ -13,6 +16,7 @@
   import 'quill/dist/quill.snow.css'
   import 'quill/dist/quill.bubble.css'
   import {quillEditor} from 'vue-quill-editor'
+  import tag_component from '../../components/Tag/tag_component'
   
   export default {
     name: "noteFile",
@@ -24,6 +28,7 @@
         hadCreated: false,//标注是否是要修改笔记（true）或新建笔记(false)
         content: '',
         content_backup: '',
+        tagVisible: false,
         editorOption: {
           // something config
           // theme:'bubble'
@@ -55,7 +60,8 @@
       }
     },
     components: {
-      quillEditor
+      quillEditor,
+      tag_component
     },
     methods: {
       /* 保存笔记 */
@@ -65,6 +71,9 @@
         } else {
           this.createNote();
         }
+      },
+      showTag() {
+        this.tagVisible = !this.tagVisible;
       },
       
       /* 创建笔记 */
@@ -76,7 +85,7 @@
             "content": this.content
           }),
           cache: 'no-cache',
-          credentials: 'same-origin',
+          credentials: 'include',
           method: 'POST',
           mode: 'cors',
           redirect: 'follow',
@@ -112,7 +121,7 @@
       initNote() {
         fetch(this.constant.serverURL + "/file/initNote?id=" + this.id, {
           cache: 'no-cache',
-          credentials: 'same-origin',
+          credentials: 'include',
           method: 'POST',
           mode: 'cors',
           redirect: 'follow',
@@ -144,7 +153,7 @@
         fetch(this.constant.serverURL + "/file/updateNote", {
           body: JSON.stringify(send_data),
           cache: 'no-cache',
-          credentials: 'same-origin',
+          credentials: 'include',
           method: 'POST',
           mode: 'cors',
           redirect: 'follow',
@@ -182,6 +191,12 @@
   }
 </script>
 
-<style scoped>
-
+<style>
+  .noteFile .note_name {
+    width: 50%;
+  }
+  
+  .tagArea {
+    margin: 10px;
+  }
 </style>

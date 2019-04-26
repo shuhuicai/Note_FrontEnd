@@ -2,7 +2,7 @@
   <div>
     <div class="custom-tree-container">
       <div class="block">
-        <el-tree ref="tree" :data="folderData" node-key="id" :expand-on-click-node="true"
+        <el-tree v-if="!isNoData" ref="tree" :data="folderData" node-key="id" :expand-on-click-node="true"
                  @node-contextmenu="rightClick" @node-click="leftClick">
             <span class="custom-tree-node" slot-scope="{ node, data }">
               <li v-if="data.isFolder==1">
@@ -17,6 +17,9 @@
               </li>
           </span>
         </el-tree>
+        
+        <el-button v-else style="margin: 2em" class="el-button--primary" @click="createFirstFolder">创建
+        </el-button>
       </div>
     </div>
     
@@ -73,6 +76,7 @@
         label: '',
         menuVisible: false,
         openVisible: false,//右键菜单中是否显示“打开”“上传”等菜单项，右击文件夹时显示
+        isNoData: false,
       }
     },
     
@@ -95,7 +99,8 @@
       initFolder() {
         fetch(this.constant.serverURL + "/folder/initFolder", {
           cache: 'no-cache',
-          credentials: 'same-origin',
+          // credentials: 'same-origin',
+          credentials: 'include',
           method: 'POST',
           mode: 'cors',
           redirect: 'follow',
@@ -106,6 +111,11 @@
         }).then(response => {
             response.json().then((data) => {
               this.folderData = data;
+              if (this.folderData.length === 0) {
+                this.isNoData = true;
+              } else {
+                this.isNoData = false;
+              }
             });
           },
           response => {
@@ -189,7 +199,8 @@
         fetch(this.constant.serverURL + "/folder/deleteFolder", {
           body: JSON.stringify(this.currentData),
           cache: 'no-cache',
-          credentials: 'same-origin',
+          // credentials: 'same-origin',
+          credentials: 'include',
           method: 'POST',
           mode: 'cors',
           redirect: 'follow',
@@ -220,7 +231,7 @@
         fetch(this.constant.serverURL + "/folder/createFolder", {
           body: JSON.stringify(sendData),
           cache: 'no-cache',
-          credentials: 'same-origin',
+          credentials: 'include',
           method: 'POST',
           mode: 'cors',
           redirect: 'follow',
@@ -239,6 +250,37 @@
             this.currentData = data;
             this.currentData.remarks = 1;
             this.label = "新建文件夹";
+          })
+        }, response => {
+          this.$notify.error({
+            title: '提示',
+            message: '内部错误',
+          });
+        })
+      },
+      
+      /* 当没有文件夹时,新建一个 */
+      createFirstFolder() {
+        fetch(this.constant.serverURL + "/folder/createFolder", {
+          body: JSON.stringify({
+            "label": "新建文件夹",
+            "parentId": "0",
+            "isFolder": 1,
+            "fileType": -1
+          }),
+          cache: 'no-cache',
+          credentials: 'include',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer',
+          headers: {
+            "Content-Type": 'application/json;charset=UTF-8',
+          }
+        }).then(response => {
+          response.json().then((data) => {
+            this.isNoData = false;
+            this.folderData.push(data);
           })
         }, response => {
           this.$notify.error({
@@ -302,7 +344,8 @@
               "label": this.label
             }),
             cache: 'no-cache',
-            credentials: 'same-origin',
+            // credentials: 'same-origin',
+            credentials: 'include',
             method: 'POST',
             mode: 'cors',
             redirect: 'follow',

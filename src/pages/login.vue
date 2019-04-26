@@ -10,7 +10,7 @@
         <p>
           <img src="../assets/password_icon.png"/>
           <input type="password" v-model="password" name="password" placeholder="密码"></p>
-        <button @click="doLogin" class="el-button--primary">登录</button>
+        <el-button @click="doLogin" class="el-button--primary">登录</el-button>
       </div>
     </div>
   </div>

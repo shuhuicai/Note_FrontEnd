@@ -5,9 +5,9 @@
       <p>邮箱<input v-model="email" type="text"/></p>
       <p>密码<input v-model="password" type="password"/></p>
       <p>验证码<input v-model="verify_input" type="text"/>
-        <button type="button" @click="getVerify">获取验证码</button>
+        <el-button type="button" @click="getVerify">获取验证码</el-button>
       </p>
-      <button type="button" @click="registerReq">注册</button>
+      <el-button type="button" @click="registerReq">注册</el-button>
     </div>
   </div>
 </template>
