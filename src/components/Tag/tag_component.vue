@@ -59,8 +59,38 @@
         
         })
       },
+      //删除标签
       handleClose(tag) {
-        this.tags.splice(this.tags.indexOf(tag), 1);
+        fetch(this.constant.serverURL + "/tag/deleteTagInNote", {
+          body: "noteId=" + this.note_id + "&tagContent=" + tag,
+          cache: 'no-cache',
+          credentials: 'include',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Accept: "application/json"
+          }
+        }).then(response => {
+          response.json().then((data) => {
+            if (data) {
+              this.tags.splice(this.tags.indexOf(tag), 1);
+            } else {
+              this.$notify.error({
+                title: '提示',
+                message: '删除标签失败',
+              });
+            }
+          })
+        }, response => {
+          this.$notify.error({
+            title: '提示',
+            message: '内部错误',
+          });
+        });
+        
       },
       showInput() {
         this.inputVisible = true;

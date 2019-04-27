@@ -296,6 +296,7 @@
           name: 'noteFile',
           params: {
             id: this.currentData.id,
+            hadCreated: false,
           }
         });
       },
