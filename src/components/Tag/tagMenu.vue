@@ -15,11 +15,11 @@
       }
     },
     created() {
-      // this.getTags();
+      this.getTags();
     },
     methods: {
       getTags() {
-        fetch(this.constant.serverURL + "", {
+        fetch(this.constant.serverURL + "/tag/getTags", {
           cache: 'no-cache',
           credentials: 'include',
           method: 'POST',
@@ -30,7 +30,10 @@
             Accept: "application/json"
           }
         }).then(response => {
-        
+          response.json().then((data) => {
+            this.tags = data;
+            console.log(data)
+          })
         }, response => {
         
         })
