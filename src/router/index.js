@@ -10,6 +10,7 @@ import adminHome from '../pages/admin/adminHome'
 import userList from '../pages/admin/pages/userList'
 import folderList from '../pages/admin/pages/folderList'
 import register from '../pages/register'
+import note_list from '../pages/file/noteList'
 
 Vue.use(Router)
 
@@ -45,6 +46,10 @@ export default new Router({
           name: 'noteFile',
           path: '/home/noteFile',
           component: noteFile
+        }, {
+          name: 'note_list',
+          path: '/home/note_list',
+          component: note_list
         }
       ]
     }, {

@@ -1,7 +1,9 @@
 <template>
   <div>
     <el-tree :data="tags">
-    
+      <span class="custom-tree-node" slot-scope="{node,data}" @dblclick="double_click(data.label)">
+        {{node.label}}
+      </span>
     </el-tree>
   </div>
 </template>
@@ -32,11 +34,13 @@
         }).then(response => {
           response.json().then((data) => {
             this.tags = data;
-            console.log(data)
           })
         }, response => {
         
         })
+      },
+      double_click(label) {
+        this.$router.push({name: 'note_list', params: {tag_content: label}});
       }
     }
   }
