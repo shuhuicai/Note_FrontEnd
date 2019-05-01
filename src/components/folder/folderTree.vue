@@ -48,6 +48,9 @@
         <el-menu-item index="6" v-show="openVisible">
           <span slot="title">导出</span>
         </el-menu-item>
+        <el-menu-item index="7" v-show="openVisible">
+          <span slot="title">分享</span>
+        </el-menu-item>
       </el-menu>
     </div>
     
@@ -180,6 +183,8 @@
           this.updateName();
         } else if (key == 6) {//导出
           this.exportNote();
+        } else if (key == 7) {//分享
+          this.shareNote();
         }
         this.menuVisible = false;
       },
@@ -408,6 +413,30 @@
           }
         );
       },
+      
+      /* 分享笔记 */
+      shareNote() {
+        fetch(this.constant.serverURL + "/file/shareNote", {
+          body: "id=" + this.currentData.id,
+          cache: 'no-cache',
+          credentials: 'include',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            Accept: "application/json"
+          }
+        }).then(response => {
+          response.json().then((data) => {
+            this.$alert('<p>链接生成成功,快去复制链接分享给好友吧</p><p>' + data + '</p>', '分享链接', {
+              dangerouslyUseHTMLString: true
+            });
+          })
+        }, response => {
+        })
+      }
     }
   }
 </script>
