@@ -45,6 +45,9 @@
         <el-menu-item index="5">
           <span slot="title">重命名</span>
         </el-menu-item>
+        <el-menu-item index="6" v-show="openVisible">
+          <span slot="title">导出</span>
+        </el-menu-item>
       </el-menu>
     </div>
     
@@ -175,6 +178,8 @@
           this.popConfirm();
         } else if (key == 5) {//重命名
           this.updateName();
+        } else if (key == 6) {//导出
+          this.exportNote();
         }
         this.menuVisible = false;
       },
@@ -373,7 +378,36 @@
             });
           })
         }
-      }
+      },
+      
+      /**
+       * 导出笔记
+       */
+      exportNote() {
+        var name = this.currentData.label;
+        fetch(this.constant.serverURL + "/file/exportNote", {
+          body: "id=" + this.currentData.id,
+          cache: 'no-cache',
+          credentials: 'include',
+          method: 'POST',
+          mode: 'cors',
+          redirect: 'follow',
+          referrer: 'no-referrer',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }).then(response => {
+            response.blob().then((data) => {
+              let blobUrl = window.URL.createObjectURL(data);
+              const a = document.createElement('a');
+              a.download = name + '.pdf';
+              a.href = blobUrl;
+              a.click();
+            })
+          }, response => {
+          }
+        );
+      },
     }
   }
 </script>
