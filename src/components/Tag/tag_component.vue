@@ -127,6 +127,7 @@
               if (data) {
                 //成功
                 this.tags.push(content);
+                this.$root.Bus.$emit('updateTagList', content);//更新我的标签列表数据
               } else {
                 this.$notify.error({
                   title: '提示',

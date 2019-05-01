@@ -18,6 +18,20 @@
     },
     created() {
       this.getTags();
+      this.$root.Bus.$on('updateTagList', value => {
+        var flag = false;//标志是否有元素与对象相同,默认是没有 false
+        for (var i = 0; i < this.tags.length; i++) {
+          if (value == this.tags[i].label) {
+            flag = true;
+            break;
+          } else {
+            flag = false;
+          }
+        }
+        if (!flag) {//如果都不相同,刷新列表
+          this.getTags();
+        }
+      });
     },
     methods: {
       getTags() {
