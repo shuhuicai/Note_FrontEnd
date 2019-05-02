@@ -53,10 +53,22 @@
       }
     },
     created() {
-      this.id = this.$route.params.id;
-      this.hadCreated = this.$route.params.hadCreated;
+      this.id = this.$route.query.id;
+      this.hadCreated = this.$route.query.hadCreated;
       if (this.hadCreated) {
         this.initNote();
+      }
+    },
+    watch: {
+      '$route'(to, from) {
+        this.id = this.$route.query.id;
+        this.hadCreated = this.$route.query.hadCreated;
+        if (this.hadCreated) {
+          this.initNote();
+        } else {
+          this.noteName = '';
+          this.content = '';
+        }
       }
     },
     components: {
@@ -80,7 +92,7 @@
       createNote() {
         fetch(this.constant.serverURL + "/file/saveNote", {
           body: JSON.stringify({
-            "parentId": this.$route.params.id,
+            "parentId": this.$route.query.id,
             "label": this.noteName,
             "content": this.content
           }),

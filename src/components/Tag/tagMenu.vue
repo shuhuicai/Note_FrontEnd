@@ -54,7 +54,7 @@
         })
       },
       double_click(label) {
-        this.$router.push({name: 'note_list', params: {tag_content: label}});
+        this.$router.push({name: 'note_list', query: {tag_content: label}});
       }
     }
   }

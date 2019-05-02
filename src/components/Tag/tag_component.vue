@@ -36,6 +36,11 @@
     created() {
       this.getTags();
     },
+    watch: {
+      'note_id'() {
+        this.getTags();
+      }
+    },
     methods: {
       //初始化获取已添加的标签
       getTags() {

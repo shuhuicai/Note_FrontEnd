@@ -17,8 +17,14 @@
       }
     },
     created() {
-      this.tag_content = this.$route.params.tag_content;
+      this.tag_content = this.$route.query.tag_content;
       this.getNoteList();
+    },
+    watch: {
+      '$route'(to, from) {
+        this.tag_content = this.$route.query.tag_content;
+        this.getNoteList();
+      }
     },
     methods: {
       getNoteList() {
@@ -41,8 +47,10 @@
         }, response => {
         
         })
-      },
-    },
+      }
+      ,
+    }
+    ,
   }
 </script>
 

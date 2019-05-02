@@ -304,7 +304,7 @@
       createNote() {
         this.$router.push({
           name: 'noteFile',
-          params: {
+          query: {
             id: this.currentData.id,
             hadCreated: false,
           }
@@ -318,10 +318,11 @@
         } else if (data.fileType == 1) {//pdf
           this.$router.push({name: 'showFile', params: {file_url: data.fileUrl}});
         } else if (data.fileType == 3) {//富文本
+          
           this.openNoteData = data;
           this.$router.push({
             name: 'noteFile',
-            params: {
+            query: {
               id: data.id,
               hadCreated: true
             }
