@@ -28,6 +28,7 @@
         uploadParams: {
           "parentId": this.$route.params.id,//当前所属的文件夹id
           "fileType": this.$route.params.fileType,//文件类型
+          "creator": window.localStorage.getItem('username')
         }
       }
     },

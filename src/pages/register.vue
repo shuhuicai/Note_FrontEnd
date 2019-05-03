@@ -1,13 +1,22 @@
 <template>
   <div class="register">
-    <div class="inputBox">
+    <div class="centerBox">
       <p>注册</p>
-      <p>邮箱<input v-model="email" type="text"/></p>
-      <p>密码<input v-model="password" type="password"/></p>
-      <p>验证码<input v-model="verify_input" type="text"/>
+      <div class="inputInfo">
+        <p>
+          <img src="../assets/account_icon.png"/>
+          <input type="text" v-model="email" placeholder="请输入邮箱地址">
+        </p>
+        <p>
+          <img src="../assets/password_icon.png"/>
+          <input type="password" v-model="password" placeholder="密码">
+        </p>
+        <p>
+          <input v-model="verify_input" type="text" placeholder="请输入验证码"/>
+        </p>
         <el-button type="button" @click="getVerify">获取验证码</el-button>
-      </p>
-      <el-button type="button" @click="registerReq">注册</el-button>
+        <el-button type="button" @click="registerReq" class="el-button--primary">注册</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -128,15 +137,53 @@
 </script>
 
 <style scoped>
-  .inputBox {
+  .centerBox {
     text-align: center;
     position: absolute;
-    top: 45%;
-    left: 45%;
-    border: black solid 1px;
+    width: 21%;
+    top: 40%;
+    left: 40%;
+    transform: translateY(-50%);
   }
   
-  .inputBox > p {
-    margin: 10px;
+  .inputInfo {
+    margin-top: 10px;
+    border: 2px solid gray;
+    padding: 20px;
+  }
+  
+  #centerBox > p {
+    font-size: 1.5em;
+  }
+  
+  .inputInfo > p {
+    margin: 20px 1%;
+    border-bottom: 1px solid #d8d8d8;
+    width: 96%;
+  }
+  
+  input {
+    border: none;
+    padding: 0px 1%;
+    margin: 1%;
+    background: #fff;
+    width: 84%;
+    font-size: 16px;
+    line-height: 30px;
+    outline: none;
+  }
+  
+  .inputInfo > p > img {
+    width: 26px;
+    float: left;
+    vertical-align: middle;
+    margin-top: 1px;
+  }
+  
+  .register {
+    height: 100%;
+    background-color: black;
+    min-height: 100%;
+    width: 100%;
   }
 </style>
