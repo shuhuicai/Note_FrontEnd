@@ -1,7 +1,7 @@
 <template>
   <div class="showFile">
-    <!--<embed v-bind:src="req_url" width="100%" height="800px"/>-->
-    <iframe :src="req_url" width="100%" height="750px"></iframe>
+    <embed v-bind:src="req_url" width="100%" height="800px"/>
+    <!--<iframe :src="req_url" width="100%" height="750px"></iframe>-->
   </div>
 </template>
 
@@ -11,7 +11,7 @@
     data() {
       return {
         file_url: '',
-        req_url: this.constant.serverURL + "/file/showFile?visitURL=" + this.file_url
+        req_url: this.constant.serverURL + "/file/showFile?visitURL=" + this.file_url,
       }
     },
     beforeCreate() {

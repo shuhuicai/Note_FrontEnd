@@ -317,6 +317,8 @@
           this.$router.push({name: 'showImage', params: {imgURL: data.fileUrl}});
         } else if (data.fileType == 1) {//pdf
           this.$router.push({name: 'showFile', params: {file_url: data.fileUrl}});
+        } else if (data.fileType == 2) {//word
+          this.$router.push({name: 'showFile', params: {file_url: data.fileUrl}});
         } else if (data.fileType == 3) {//富文本
           
           this.openNoteData = data;
@@ -465,5 +467,9 @@
     width: 24px;
     height: 24px;
     display: inline-block;
+  }
+  
+  #rightClickMenu {
+    z-index: 999;
   }
 </style>

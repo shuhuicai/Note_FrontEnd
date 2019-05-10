@@ -11,6 +11,7 @@
           <img src="../assets/password_icon.png"/>
           <input type="password" v-model="password" name="password" placeholder="密码"></p>
         <el-button @click="doLogin" class="el-button--primary">登录</el-button>
+        <el-button type="button" @click="register">注册</el-button>
       </div>
     </div>
   </div>
@@ -69,6 +70,9 @@
             message: '登录失败',
           });
         })
+      },
+      register() {
+        this.$router.push({path: '/register'});
       }
     }
   }
