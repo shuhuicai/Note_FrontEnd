@@ -11,6 +11,7 @@ import userList from '../pages/admin/pages/userList'
 import folderList from '../pages/admin/pages/folderList'
 import register from '../pages/register'
 import note_list from '../pages/file/noteList'
+import showWord from '../pages/file/showWord'
 
 Vue.use(Router)
 
@@ -42,6 +43,10 @@ export default new Router({
           name: 'showFile',
           path: '/home/showFile',
           component: showFile,
+        }, {
+          name: 'showWord',
+          path: '/home/showWord',
+          component: showWord
         }, {
           name: 'noteFile',
           path: '/home/noteFile',

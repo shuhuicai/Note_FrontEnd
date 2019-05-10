@@ -318,7 +318,7 @@
         } else if (data.fileType == 1) {//pdf
           this.$router.push({name: 'showFile', params: {file_url: data.fileUrl}});
         } else if (data.fileType == 2) {//word
-          this.$router.push({name: 'showFile', params: {file_url: data.fileUrl}});
+          this.$router.push({name: 'showWord', params: {file_url: data.fileUrl}});
         } else if (data.fileType == 3) {//富文本
           
           this.openNoteData = data;
